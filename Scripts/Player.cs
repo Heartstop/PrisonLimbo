@@ -1,7 +1,3 @@
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using Godot;
 using PrisonLimbo.Scripts.Singletons;
 
 namespace PrisonLimbo.Scripts
@@ -25,7 +21,7 @@ namespace PrisonLimbo.Scripts
         {
             var dir = InputSystem.Direction;
             if(dir != Direction.None) {
-                _animationController.PlayAnimation(Direction.ToAnimationState());
+                _animationController.PlayAnimation(dir.ToAnimationState());
 
             }
         }
