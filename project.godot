@@ -18,6 +18,10 @@ _global_script_class_icons={
 config/name="PrisonLimbo"
 config/icon="res://icon.png"
 
+[autoload]
+
+InputSystem="*res://Scripts/Singletons/InputSystem.cs"
+
 [rendering]
 
 environment/default_environment="res://default_env.tres"
