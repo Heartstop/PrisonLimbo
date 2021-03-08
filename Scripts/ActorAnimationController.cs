@@ -1,30 +1,36 @@
+using System;
 using Godot;
 
 public class ActorAnimationController : AnimatedSprite
 {
-    [Signal]
-    public delegate void AnimationFinished();
-
     private AnimationPlayer _animationPlayer;
 
-    private Vector2 _startPostistion;
+    private Vector2 _startPosition;
+
+    private Action postAnimation = null;
 
     public override void _Ready()
     {
         _animationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
-        _startPostistion = Position;
+        _startPosition = Position;
     }
 
     public void PlayAnimation(AnimationState animation)
     {
-        GD.Print(animation.ToString());
         _animationPlayer.Play(animation.ToString());
+    }
+
+    public void PlayAnimation(AnimationState animation, Action after)
+    {
+        postAnimation = after;
+        PlayAnimation(animation);
     }
 
     public void OnAnimationPlayerFinished(string animationName)
     {
-        Position = _startPostistion;
-        EmitSignal(nameof(AnimationFinished));
+        Position = _startPosition;
+        postAnimation();
+        postAnimation = null;
     }
 }
 

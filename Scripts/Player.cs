@@ -21,11 +21,11 @@ namespace PrisonLimbo.Scripts
         private void ProcessMove()
         {
             var dir = InputSystem.Direction;
-            if (dir == Direction.None || !World.CanMove(this, dir))
+            var newPos = MapPosition + dir.ToVector2();
+            if (dir == Direction.None || !World.CanMove(this, newPos))
                 return;
-
-            // TODO After animation change MapPosition
-            _animationController.PlayAnimation(dir.ToAnimationState());
+            
+            _animationController.PlayAnimation(dir.ToAnimationState(), () => MapPosition = newPos);
         }
     }
 }
