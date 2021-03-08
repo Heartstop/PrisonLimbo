@@ -22,7 +22,7 @@ namespace PrisonLimbo.Scripts
         {
             var dir = InputSystem.Direction;
             var newPos = MapPosition + dir.ToVector2();
-            if (dir == Direction.None || !World.CanMove(this, newPos))
+            if (dir == Direction.None)
                 return;
             
             _animationController.PlayAnimation(dir.ToAnimationState(), () => MapPosition = newPos);
