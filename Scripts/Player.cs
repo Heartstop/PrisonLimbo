@@ -21,7 +21,7 @@ namespace PrisonLimbo.Scripts
         private void ProcessMove()
         {
             var dir = InputSystem.Direction;
-            if (dir == Direction.None || !World.CanMove(this, dir))
+            if (dir == Direction.None)
                 return;
 
             // TODO After animation change MapPosition
