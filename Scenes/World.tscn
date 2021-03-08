@@ -5,7 +5,11 @@
 
 [node name="main" type="Node2D"]
 
+[node name="Camera2D" type="Camera2D" parent="."]
+current = true
+
 [node name="World" type="TileMap" parent="."]
+cell_size = Vector2( 16, 16 )
 format = 1
 script = ExtResource( 2 )
 
