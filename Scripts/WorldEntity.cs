@@ -4,8 +4,8 @@ namespace PrisonLimbo.Scripts
 {
     public abstract class WorldEntity : Node2D
     {
-        protected World World = null!;
         private Vector2 _mapPosition;
+        protected World World = null!;
 
         public Vector2 MapPosition
         {

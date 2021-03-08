@@ -1,8 +1,11 @@
 using System;
+using Godot;
 using PrisonLimbo.Scripts;
 
-public static class DirectionExtensions {
-    public static AnimationState ToAnimationState(this Direction direction){
+public static class DirectionExtensions
+{
+    public static AnimationState ToAnimationState(this Direction direction)
+    {
         return direction switch
         {
             Direction.Up => AnimationState.Up,
@@ -10,6 +13,19 @@ public static class DirectionExtensions {
             Direction.Down => AnimationState.Down,
             Direction.Left => AnimationState.Left,
             _ => throw new ArgumentOutOfRangeException()
+        };
+    }
+
+    public static Vector2 ToVector2(this Direction direction)
+    {
+        return direction switch
+        {
+            Direction.None => Vector2.Zero,
+            Direction.Up => Vector2.Up,
+            Direction.Right => Vector2.Right,
+            Direction.Down => Vector2.Down,
+            Direction.Left => Vector2.Left,
+            _ => throw new ArgumentOutOfRangeException(nameof(direction), direction, null)
         };
     }
 }

@@ -11,6 +11,7 @@ namespace PrisonLimbo.Scripts
             base._Ready();
             _animationController = GetNode<ActorAnimationController>("Pivot/ActorAnimationController");
         }
+
         public override void _Process(float delta)
         {
             base._Process(delta);
@@ -20,10 +21,11 @@ namespace PrisonLimbo.Scripts
         private void ProcessMove()
         {
             var dir = InputSystem.Direction;
-            if(dir != Direction.None) {
-                _animationController.PlayAnimation(dir.ToAnimationState());
+            if (dir == Direction.None || !World.CanMove(this, dir))
+                return;
 
-            }
+            // TODO After animation change MapPosition
+            _animationController.PlayAnimation(dir.ToAnimationState());
         }
     }
 }
