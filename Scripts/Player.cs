@@ -5,6 +5,7 @@ namespace PrisonLimbo.Scripts
     public sealed class Player : Actor
     {
         private ActorAnimationController _animationController = null!;
+        private bool _canMove = true;
 
         public override void _Ready()
         {
@@ -22,10 +23,14 @@ namespace PrisonLimbo.Scripts
         {
             var dir = InputSystem.Direction;
             var newPos = MapPosition + dir.ToVector2();
-            if (dir == Direction.None)
+            if (dir == Direction.None || !_canMove)
                 return;
             
-            _animationController.PlayAnimation(dir.ToAnimationState(), () => MapPosition = newPos);
+            _canMove = false;
+            _animationController.PlayAnimation(dir.ToAnimationState(), () => {
+                MapPosition = newPos;
+                _canMove = true;
+                });
         }
     }
 }
