@@ -13,5 +13,7 @@ namespace PrisonLimbo.Scripts
             ZAsRelative = false;
             ZIndex = (int) Position.y;
         }
+        
+        public virtual void TurnProcess() {}
     }
 }

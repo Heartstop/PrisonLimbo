@@ -2,7 +2,7 @@ using PrisonLimbo.Scripts.Singletons;
 
 namespace PrisonLimbo.Scripts
 {
-    public sealed class Player : Actor
+    public class Player : Actor
     {
         private ActorAnimationController _animationController = null!;
         private bool _canMove = true;
@@ -16,6 +16,10 @@ namespace PrisonLimbo.Scripts
         public override void _Process(float delta)
         {
             base._Process(delta);
+        }
+
+        public override void TurnProcess()
+        {
             ProcessMove();
         }
 
