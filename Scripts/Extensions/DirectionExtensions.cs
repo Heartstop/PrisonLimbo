@@ -1,9 +1,11 @@
 using System;
+using System.Diagnostics.Contracts;
 using Godot;
 using PrisonLimbo.Scripts;
 
 public static class DirectionExtensions
 {
+    [Pure]
     public static AnimationState ToAnimationState(this Direction direction)
     {
         return direction switch
@@ -16,6 +18,7 @@ public static class DirectionExtensions
         };
     }
 
+    [Pure]
     public static Vector2 ToVector2(this Direction direction)
     {
         return direction switch
