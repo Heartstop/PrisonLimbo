@@ -1,10 +1,11 @@
+using Godot;
 using PrisonLimbo.Scripts.Singletons;
 
 namespace PrisonLimbo.Scripts
 {
     public class Player : Actor
     {
-        private ActorAnimationController _animationController = null!;
+        private ActorAnimationController _animationController;
         private bool _canMove = true;
         private bool _passTurn = false;
 
@@ -40,9 +41,13 @@ namespace PrisonLimbo.Scripts
             _canMove = false;
             _animationController.PlayAnimation(dir.ToAnimationState(), () => {
                 MapPosition = newPos;
-                _canMove = true;
-                _passTurn = true;
+                PassTurn();
                 });
+        }
+
+        private void PassTurn() {
+            _canMove = true;
+            _passTurn = true;
         }
     }
 }
