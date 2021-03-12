@@ -230,7 +230,10 @@ namespace PrisonLimbo.Scripts.WorldGenerator
             if (!_subdivide(_random, width, height))
                 return ImmutableArray<Wall>.Empty;
 
-            if (width > _minimalRoomDimension * 2 && (height <= _minimalRoomDimension * 2 || _random.NextBool()))
+            bool vertical = width > _minimalRoomDimension * 2,
+                horizontal = height > _minimalRoomDimension * 2;
+            
+            if (vertical && (!horizontal || _random.NextBool()))
             {
                 var divider = _random.Next(_minimalRoomDimension, width - _minimalRoomDimension);
                 var wall = new Wall(Axis.Vertical, divider + xOffset, yOffset, height);
@@ -239,7 +242,7 @@ namespace PrisonLimbo.Scripts.WorldGenerator
                 return left.Concat(right).Append(wall);
             }
 
-            if (height > _minimalRoomDimension * 2)
+            if (horizontal)
             {
                 var divider = _random.Next(_minimalRoomDimension, height - _minimalRoomDimension);
                 var wall = new Wall(Axis.Horizontal, xOffset, divider + yOffset, width);

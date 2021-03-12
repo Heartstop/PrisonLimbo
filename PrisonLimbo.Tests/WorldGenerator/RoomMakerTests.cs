@@ -24,7 +24,7 @@ namespace PrisonLimbo.Tests.WorldGenerator
         [InlineData(100, 100, 5)]
         [InlineData(10, 10, 9)]
         [InlineData(100, 100, 50)]
-        [InlineData(1000, 1000, 5)]
+        [InlineData(500, 500, 5)]
         public void GenerateRooms_Anything_Anything(int width, int height, int minRoom)
         {
             // Given
@@ -35,7 +35,7 @@ namespace PrisonLimbo.Tests.WorldGenerator
             PrintMap(rooms);
         }
 
-        private bool Subdivide(Random random, int width, int height) => random.NextBool(0.75d);
+        private bool Subdivide(Random random, int width, int height) => (long)width * height > 100_000 || random.NextBool(0.75d);
 
         private void PrintMap(RoomCellAbstract[,] structure)
         {
