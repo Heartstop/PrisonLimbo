@@ -25,6 +25,7 @@ wait_time = 10.0
 one_shot = true
 
 [node name="TurnDelay" type="Timer" parent="World/ActorTurnController"]
+wait_time = 2.0
 one_shot = true
 
 [node name="Timebar" parent="World/ActorTurnController" instance=ExtResource( 4 )]

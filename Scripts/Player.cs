@@ -6,6 +6,7 @@ namespace PrisonLimbo.Scripts
     {
         private ActorAnimationController _animationController = null!;
         private bool _canMove = true;
+        private bool _passTurn = false;
 
         public override void _Ready()
         {
@@ -18,9 +19,17 @@ namespace PrisonLimbo.Scripts
             base._Process(delta);
         }
 
-        public override void TurnProcess()
+        public override void TakeTurn()
         {
+            base.TakeTurn();
+            _passTurn = false;
+        }
+
+        public override bool TurnProcess()
+        {
+            base.TurnProcess();
             ProcessMove();
+            return _passTurn;
         }
 
         private void ProcessMove()
@@ -34,6 +43,7 @@ namespace PrisonLimbo.Scripts
             _animationController.PlayAnimation(dir.ToAnimationState(), () => {
                 MapPosition = newPos;
                 _canMove = true;
+                _passTurn = true;
                 });
         }
     }

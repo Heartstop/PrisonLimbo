@@ -14,6 +14,10 @@ namespace PrisonLimbo.Scripts
             ZIndex = (int) Position.y;
         }
         
-        public virtual void TurnProcess() {}
+        public virtual void TakeTurn() {
+        }
+        public virtual bool TurnProcess() {
+            return false;
+        }
     }
 }

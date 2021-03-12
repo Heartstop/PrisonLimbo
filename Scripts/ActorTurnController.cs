@@ -25,14 +25,18 @@ namespace PrisonLimbo.Scripts
 
         public override void _Process(float delta){
             if(_isPlayerTurn) {
-                                _timeBar.Value = _turnTimer.TimeLeft;
-                _player.TurnProcess();
+                _timeBar.Value = _turnTimer.TimeLeft;
+                if(_player.TurnProcess()){
+                    _turnTimer.Stop();
+                    _timeBar.Value = 0;
+                    OnTurnTimerTimeout();
+                };
             }
         }
 
         private void RunNpcTurnProcess() {
             var npcActors = GetParent().GetChildren().OfType<NpcActor>().ToList();
-            npcActors.ForEach((actor) => actor.TurnProcess());
+            npcActors.ForEach((actor) => actor.TakeTurn());
         }
 
         private void OnTurnTimerTimeout() {
@@ -43,6 +47,7 @@ namespace PrisonLimbo.Scripts
 
         private void OnTurnDelayTimeout() {
             _isPlayerTurn = true;
+            _player.TakeTurn();
             _turnTimer.Start();
         }
 
