@@ -19,7 +19,7 @@ namespace PrisonLimbo.Scripts.WorldGenerator
         public RoomMaker(Random random, int minimalRoomDimension)
         {
             _random = random;
-            if (minimalRoomDimension < 3)
+            if (minimalRoomDimension < 1)
                 throw new ArgumentOutOfRangeException(nameof(minimalRoomDimension), minimalRoomDimension, null);
             _minimalRoomDimension = minimalRoomDimension;
         }
@@ -32,7 +32,7 @@ namespace PrisonLimbo.Scripts.WorldGenerator
                 throw new ArgumentOutOfRangeException(nameof(height), height, null);
 
             var outerWalls = OuterWalls(width, height);
-            var innerWalls = GenerateWalls(width, height, 0, 0);
+            var innerWalls = GenerateWalls(width - 2, height - 2, 1, 1);
             var walls = outerWalls.Concat(innerWalls);
             var area = new RoomCellAbstract[width, height];
             foreach (var wall in walls)
@@ -47,7 +47,7 @@ namespace PrisonLimbo.Scripts.WorldGenerator
                         break;
                     case Axis.Vertical:
                         end = wall.YPos + wall.Length;
-                        for (var y = wall.YPos; y < end; y++)
+                        for(var y = wall.YPos; y < end; y++)
                             area[wall.XPos, y] = RoomCellAbstract.Wall;
                         break;
                     case Axis.None:
@@ -76,34 +76,35 @@ namespace PrisonLimbo.Scripts.WorldGenerator
             );
             // This route could be used for actual gameplay as well.
             var route = rooms.Shuffle(_random).ToImmutableArray();
-            var resultingPaths = new List<ImmutableArray<ImmutableArray<Room>>>();
+            var resultingPaths = new List<ImmutableList<ImmutableList<Room>>>();
             for (var i = 0; i < route.Length - 1; i++)
             {
                 var start = route[i];
                 var destination = route[i + 1];
                 int? destinationFound = null;
-                var bestValue = new Dictionary<Room, ImmutableArray<ImmutableArray<Room>>>();
-                var search = new Queue<ImmutableArray<Room>>();
-                search.Enqueue(ImmutableArray.Create(start));
+                var bestValue = rooms.ToDictionary(r => r, _ => ImmutableList<ImmutableList<Room>>.Empty);
+                var search = new Queue<ImmutableList<Room>>();
+                search.Enqueue(ImmutableList.Create(start));
                 while (search.Count > 0)
                 {
                     var current = search.Dequeue();
                     var tail = current.Last();
 
-                    if (destinationFound.HasValue && destinationFound.Value < current.Length)
+                    if (destinationFound.HasValue && destinationFound.Value < current.Count)
                         continue;
 
                     if (tail == destination)
-                        destinationFound = current.Length;
-                    
-                    var explored = bestValue.TryGetValue(tail, out var previousValue);
-                    if (explored && previousValue.First().Length < current.Length)
+                        destinationFound = current.Count;
+
+                    var previousValue = bestValue[tail];
+                    var explored = previousValue.Count > 0;
+                    if (explored && previousValue.First().Count < current.Count)
                         continue;
 
-                    if (!explored || previousValue.First().Length >= current.Length)
-                        bestValue[tail] = bestValue[tail].Where(r => r.Length == current.Length).Append(current).ToImmutableArray();
+                    if (!explored || previousValue.First().Count >= current.Count)
+                        bestValue[tail] = bestValue[tail].Where(r => r.Count == current.Count).Append(current).ToImmutableList();
 
-                    foreach (var next in possible[tail].Keys.Select(r => current.Append(r).ToImmutableArray()))
+                    foreach (var next in possible[tail].Keys.Select(r => current.Append(r).ToImmutableList()))
                         search.Enqueue(next);
                 }
 
@@ -112,12 +113,14 @@ namespace PrisonLimbo.Scripts.WorldGenerator
             }
             
             // TODO Write algorithm to actually make the smallest amount of doors.
-            var paths = resultingPaths.Select(a => a.Shuffle(_random).First());
+            var paths = resultingPaths
+                .Where(p => p.Count > 0)
+                .Select(a => a.Shuffle(_random).First());
             var openings = rooms.ToDictionary(room => room, room => new HashSet<Room>(possible[room].Count));
             var doors = new HashSet<Vector2I>();
             foreach (var path in paths)
             {
-                for (var i = 0; i < path.Length - 1; i++)
+                for (var i = 0; i < path.Count - 1; i++)
                 {
                     var start = path[i];
                     var next = path[i + 1];
@@ -158,7 +161,7 @@ namespace PrisonLimbo.Scripts.WorldGenerator
                 while (toExplore.Count > 0)
                 {
                     var explore = toExplore.Pop();
-                    if (floorRoom[explore.X, explore.Y] != default)
+                    if (floorRoom[explore.X, explore.Y] != default || cells[explore.X, explore.Y] != RoomCellAbstract.Empty)
                         continue;
                     floorRoom[explore.X, explore.Y] = currentRoom;
 
@@ -178,7 +181,7 @@ namespace PrisonLimbo.Scripts.WorldGenerator
             }
 
 
-            var wallRooms = new Dictionary<Vector2I, HashSet<int>>();
+            var wallRooms = new Dictionary<Vector2I, ImmutableHashSet<int>>();
 
             for (var x = 0; x < width; x++)
             for (var y = 0; y < height; y++)
@@ -186,15 +189,16 @@ namespace PrisonLimbo.Scripts.WorldGenerator
                 if (cells[x, y] != RoomCellAbstract.Wall)
                     continue;
 
+                var pos = new Vector2I(x, y);
                 foreach (var neighbour in Vector2I.Adjacent(width, height, x, y))
                 {
                     var roomIndex = floorRoom[neighbour.X, neighbour.Y];
                     if (roomIndex == default)
                         continue;
-                    if (wallRooms.ContainsKey(neighbour))
-                        wallRooms[neighbour].Add(roomIndex);
+                    if (wallRooms.ContainsKey(pos))
+                        wallRooms[pos] = wallRooms[pos].Add(roomIndex);
                     else
-                        wallRooms.Add(neighbour, new HashSet<int>(2) {roomIndex});
+                        wallRooms.Add(pos, ImmutableHashSet.Create(roomIndex));
                 }
             }
 
@@ -218,21 +222,21 @@ namespace PrisonLimbo.Scripts.WorldGenerator
             if (height < 0)
                 throw new ArgumentOutOfRangeException(nameof(height), height, null);
 
-            if (width > _minimalRoomDimension && (height <= _minimalRoomDimension || _random.NextBool()))
+            if (width > _minimalRoomDimension * 2 && (height <= _minimalRoomDimension * 2 || _random.NextBool()))
             {
-                var divider = _random.Next(_minimalRoomDimension, width);
+                var divider = _random.Next(_minimalRoomDimension, width - _minimalRoomDimension);
                 var wall = new Wall(Axis.Vertical, divider + xOffset, yOffset, height);
-                var left = GenerateWalls(divider, height, wall.XPos, wall.YPos);
-                var right = GenerateWalls(width - divider, height, wall.XPos + divider, wall.YPos);
+                var left = GenerateWalls(divider, height, xOffset, yOffset);
+                var right = GenerateWalls(width - divider - 1, height, wall.XPos + 1, wall.YPos);
                 return left.Concat(right).Append(wall);
             }
 
-            if (height > _minimalRoomDimension)
+            if (height > _minimalRoomDimension * 2)
             {
-                var divider = _random.Next(_minimalRoomDimension, height);
+                var divider = _random.Next(_minimalRoomDimension, height - _minimalRoomDimension);
                 var wall = new Wall(Axis.Horizontal, xOffset, divider + yOffset, width);
-                var bottom = GenerateWalls(width, divider, wall.XPos, wall.YPos);
-                var top = GenerateWalls(width, height - divider, wall.XPos, wall.YPos + divider);
+                var bottom = GenerateWalls(width, divider, xOffset, yOffset);
+                var top = GenerateWalls(width, height - divider - 1, wall.XPos, wall.YPos + 1);
                 return bottom.Concat(top).Append(wall);
             }
 

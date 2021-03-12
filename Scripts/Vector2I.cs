@@ -56,11 +56,11 @@ namespace PrisonLimbo.Scripts
 
         public static IEnumerable<Vector2I> Adjacent(int width, int height, int x, int y)
         {
-            if (x < width)
+            if (x < width - 1)
                 yield return new Vector2I(x + 1, y);
             if (x > 0)
                 yield return new Vector2I(x - 1, y);
-            if (y < height)
+            if (y < height - 1)
                 yield return new Vector2I(x, y + 1);
             if (y > 0)
                 yield return new Vector2I(x, y - 1);
@@ -78,6 +78,11 @@ namespace PrisonLimbo.Scripts
         {
             X = x;
             Y = y;
+        }
+
+        public override string ToString()
+        {
+            return $"({X},{Y})";
         }
     }
 }
