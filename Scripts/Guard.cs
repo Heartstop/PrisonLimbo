@@ -1,17 +1,14 @@
 using Godot;
-using System;
+
 namespace PrisonLimbo.Scripts
 {
     public class Guard : NpcActor
     {
         private ActorAnimationController _animationController;
-        private Random _random = new Random();
-
         private BehaviourState _behaviourState = BehaviourState.Strolling;
         public override void _Ready()
         {
             base._Ready();
-            GD.Print(GetParent().GetType().ToString());
             _animationController = GetNode<ActorAnimationController>("Pivot/ActorAnimationController");
         }
 
