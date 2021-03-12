@@ -18,6 +18,15 @@ namespace PrisonLimbo.Scripts
             ZAsRelative = false;
             ZIndex = (int) Position.y;
         }
+
+        public override void _Process(float delta)
+        {
+            base._Process(delta);
+            if(Health < 0){
+                QueueFree();
+            }
+        }
+
         
         public abstract void TakeTurn();
         public abstract bool TurnProcess();
