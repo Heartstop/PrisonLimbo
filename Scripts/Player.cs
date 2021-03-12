@@ -1,5 +1,5 @@
-using Godot;
 using PrisonLimbo.Scripts.Singletons;
+using System.Linq;
 
 namespace PrisonLimbo.Scripts
 {
@@ -38,11 +38,21 @@ namespace PrisonLimbo.Scripts
             if (dir == Direction.None || !_canMove || _passTurn)
                 return;
             
+            var npc = (NpcActor?)World.GetEntities(newPos).SingleOrDefault((entity) => entity is NpcActor);
             _canMove = false;
-            _animationController.PlayAnimation(dir.ToAnimationState(), () => {
-                MapPosition = newPos;
-                PassTurn();
+
+            if(npc != null){
+                _animationController.PlayAnimation(dir.ToAnimationState(AnimationAction.Stab), () => {
+                    npc.Health -= Damage;
+                    PassTurn();
                 });
+            } else {
+                _animationController.PlayAnimation(dir.ToAnimationState(), () => {
+                    MapPosition = newPos;
+                    PassTurn();
+                    });
+            }
+
         }
 
         private void PassTurn() {
