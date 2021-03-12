@@ -34,7 +34,7 @@ namespace PrisonLimbo.Scripts
         {
             var dir = InputSystem.Direction;
             var newPos = MapPosition + dir.ToVector2();
-            if (dir == Direction.None || !_canMove)
+            if (dir == Direction.None || !_canMove || _passTurn)
                 return;
             
             _canMove = false;
