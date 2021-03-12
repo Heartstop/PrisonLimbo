@@ -1,10 +1,11 @@
 using PrisonLimbo.Scripts.Singletons;
+using System.Linq;
 
 namespace PrisonLimbo.Scripts
 {
     public class Player : Actor
     {
-        private ActorAnimationController _animationController = null!;
+        private ActorAnimationController _animationController;
         private bool _canMove = true;
         private bool _passTurn = false;
 
@@ -37,12 +38,26 @@ namespace PrisonLimbo.Scripts
             if (dir == Direction.None || !_canMove || _passTurn)
                 return;
             
+            var npc = (NpcActor?)World.GetEntities(newPos).SingleOrDefault((entity) => entity is NpcActor);
             _canMove = false;
-            _animationController.PlayAnimation(dir.ToAnimationState(), () => {
-                MapPosition = newPos;
-                _canMove = true;
-                _passTurn = true;
+
+            if(npc != null){
+                _animationController.PlayAnimation(dir.ToAnimationState(AnimationAction.Stab), () => {
+                    npc.Health -= Damage;
+                    PassTurn();
                 });
+            } else {
+                _animationController.PlayAnimation(dir.ToAnimationState(), () => {
+                    MapPosition = newPos;
+                    PassTurn();
+                    });
+            }
+
+        }
+
+        private void PassTurn() {
+            _canMove = true;
+            _passTurn = true;
         }
     }
 }
