@@ -7,5 +7,8 @@ namespace PrisonLimbo.Scripts.Extensions
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool NextBool(this Random random) => random.Next(1) == 1;
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool NextBool(this Random random, double trueChance) => random.NextDouble() < trueChance;
     }
 }

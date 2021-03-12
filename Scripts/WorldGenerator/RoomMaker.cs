@@ -13,15 +13,17 @@ namespace PrisonLimbo.Scripts.WorldGenerator
     public class RoomMaker
     {
         private readonly int _minimalRoomDimension;
+        private readonly Func<Random, int, int, bool> _subdivide;
 
         private readonly Random _random;
 
-        public RoomMaker(Random random, int minimalRoomDimension)
+        public RoomMaker(Random random, int minimalRoomDimension, Func<Random, int, int, bool> subdivide)
         {
             _random = random;
             if (minimalRoomDimension < 1)
                 throw new ArgumentOutOfRangeException(nameof(minimalRoomDimension), minimalRoomDimension, null);
             _minimalRoomDimension = minimalRoomDimension;
+            _subdivide = subdivide;
         }
 
         public RoomCellAbstract[,] GenerateRooms(int width, int height)
@@ -102,7 +104,10 @@ namespace PrisonLimbo.Scripts.WorldGenerator
                         continue;
 
                     if (!explored || previousValue.First().Count >= current.Count)
-                        bestValue[tail] = bestValue[tail].Where(r => r.Count == current.Count).Append(current).ToImmutableList();
+                        bestValue[tail] = bestValue[tail]
+                            .Where(r => r.Count == current.Count)
+                            .Append(current)
+                            .ToImmutableList();
 
                     foreach (var next in possible[tail].Keys.Select(r => current.Append(r).ToImmutableList()))
                         search.Enqueue(next);
@@ -221,6 +226,9 @@ namespace PrisonLimbo.Scripts.WorldGenerator
                 throw new ArgumentOutOfRangeException(nameof(width), width, null);
             if (height < 0)
                 throw new ArgumentOutOfRangeException(nameof(height), height, null);
+
+            if (!_subdivide(_random, width, height))
+                return ImmutableArray<Wall>.Empty;
 
             if (width > _minimalRoomDimension * 2 && (height <= _minimalRoomDimension * 2 || _random.NextBool()))
             {

@@ -1,12 +1,13 @@
 using System;
 using System.Text;
+using PrisonLimbo.Scripts.Extensions;
 using PrisonLimbo.Scripts.WorldGenerator;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace PrisonLimbo.Tests.WorldGenerator
 {
-    public class RoomMakerTests
+    public sealed class RoomMakerTests
     {
         private readonly ITestOutputHelper _output;
 
@@ -23,16 +24,19 @@ namespace PrisonLimbo.Tests.WorldGenerator
         [InlineData(100, 100, 5)]
         [InlineData(10, 10, 9)]
         [InlineData(100, 100, 50)]
+        [InlineData(1000, 1000, 5)]
         public void GenerateRooms_Anything_Anything(int width, int height, int minRoom)
         {
             // Given
             var random = new Random(1);
-            var roomMaker = new RoomMaker(random, minRoom);
+            var roomMaker = new RoomMaker(random, minRoom, Subdivide);
 
             var rooms = roomMaker.GenerateRooms(width, height);
             PrintMap(rooms);
         }
-        
+
+        private bool Subdivide(Random random, int width, int height) => random.NextBool(0.75d);
+
         private void PrintMap(RoomCellAbstract[,] structure)
         {
             var text = new StringBuilder();
