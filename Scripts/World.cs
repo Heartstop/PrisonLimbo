@@ -15,16 +15,17 @@ public class World : TileMap
 		return CanMove(requestingEntity, newPos);
 	}
 
-	public bool CanMove<T>(T requestingEntity, Vector2 target) where T : WorldEntity
-	{
-		var startPos = requestingEntity.MapPosition;
-		var cellIndex = GetCellv(target);
-		if (cellIndex != default)
-			return false;
-
-		return GetEntities(target)
-			.All(we => we.CanEnter(requestingEntity));
-	}
+    public bool CanMove<T>(T requestingEntity, Vector2 target) where T : WorldEntity
+    {
+        var startPos = requestingEntity.MapPosition;
+        /*
+        var cellIndex = GetCellv(target);
+        if (cellIndex != default)
+            return false;
+        */
+        return GetEntities(target)
+            .All(we => we.CanEnter(requestingEntity));
+    }
 
 	public IEnumerable<WorldEntity> GetEntities(Vector2 position)
 	{
