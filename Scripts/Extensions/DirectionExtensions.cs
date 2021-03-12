@@ -10,10 +10,10 @@ public static class DirectionExtensions
     {
         return direction switch
         {
-            Direction.Up => AnimationState.Up,
-            Direction.Right => AnimationState.Right,
-            Direction.Down => AnimationState.Down,
-            Direction.Left => AnimationState.Left,
+            Direction.Up => AnimationState.WalkUp,
+            Direction.Right => AnimationState.WalkRight,
+            Direction.Down => AnimationState.WalkDown,
+            Direction.Left => AnimationState.WalkLeft,
             _ => throw new ArgumentOutOfRangeException()
         };
     }

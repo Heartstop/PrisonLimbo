@@ -1,7 +1,9 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Scenes/Characters/Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Scripts/World.cs" type="Script" id=2]
+[ext_resource path="res://Scripts/ActorTurnController.cs" type="Script" id=3]
+[ext_resource path="res://Scenes/Timebar.tscn" type="PackedScene" id=4]
 
 [node name="main" type="Node2D"]
 
@@ -15,4 +17,23 @@ cell_size = Vector2( 16, 16 )
 format = 1
 script = ExtResource( 2 )
 
+[node name="ActorTurnController" type="Node" parent="World"]
+script = ExtResource( 3 )
+
+[node name="TurnTimer" type="Timer" parent="World/ActorTurnController"]
+wait_time = 10.0
+one_shot = true
+
+[node name="TurnDelay" type="Timer" parent="World/ActorTurnController"]
+wait_time = 2.0
+one_shot = true
+
+[node name="Timebar" parent="World/ActorTurnController" instance=ExtResource( 4 )]
+margin_left = -243.935
+margin_top = -140.165
+margin_right = -163.935
+margin_bottom = -136.165
+
 [node name="Player" parent="World" instance=ExtResource( 1 )]
+[connection signal="timeout" from="World/ActorTurnController/TurnTimer" to="World/ActorTurnController" method="OnTurnTimerTimeout"]
+[connection signal="timeout" from="World/ActorTurnController/TurnDelay" to="World/ActorTurnController" method="OnTurnDelayTimeout"]
