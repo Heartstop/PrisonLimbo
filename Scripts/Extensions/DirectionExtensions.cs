@@ -1,9 +1,11 @@
 using System;
+using System.Diagnostics.Contracts;
 using Godot;
 using PrisonLimbo.Scripts;
 
 public static class DirectionExtensions
 {
+    [Pure]
     public static AnimationState ToAnimationState(this Direction direction, AnimationAction action = AnimationAction.Walk)
     {   
         return action switch {
@@ -24,9 +26,10 @@ public static class DirectionExtensions
                 _ => throw new ArgumentOutOfRangeException(nameof(direction), direction, null)
             },
             _ => throw new ArgumentOutOfRangeException(nameof(action), action, null)
-        }; 
+        };
     }
 
+    [Pure]
     public static Vector2 ToVector2(this Direction direction)
     {
         return direction switch
