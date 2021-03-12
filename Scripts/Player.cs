@@ -21,13 +21,11 @@ namespace PrisonLimbo.Scripts
 
         public override void TakeTurn()
         {
-            base.TakeTurn();
             _passTurn = false;
         }
 
         public override bool TurnProcess()
         {
-            base.TurnProcess();
             ProcessMove();
             return _passTurn;
         }

@@ -1,6 +1,6 @@
 namespace PrisonLimbo.Scripts
 {
-    public class Actor : WorldEntity
+    public abstract class Actor : WorldEntity
     {
         public override bool CanEnter<T>(T entity)
         {
@@ -14,10 +14,8 @@ namespace PrisonLimbo.Scripts
             ZIndex = (int) Position.y;
         }
         
-        public virtual void TakeTurn() {
-        }
-        public virtual bool TurnProcess() {
-            return false;
-        }
+        public abstract void TakeTurn();
+        public abstract bool TurnProcess();
+
     }
 }

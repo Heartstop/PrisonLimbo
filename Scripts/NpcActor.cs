@@ -12,5 +12,13 @@ namespace PrisonLimbo.Scripts
             base._Process(delta);
         }
 
+        public override void TakeTurn() {
+        }
+
+        public override bool TurnProcess()
+        {
+            return false;
+        }
+
     }
 }
