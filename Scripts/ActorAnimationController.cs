@@ -37,8 +37,12 @@ public class ActorAnimationController : AnimatedSprite
 public enum AnimationState
 {
     Stop,
-    Right,
-    Down,
-    Left,
-    Up
+    WalkRight,
+    WalkDown,
+    WalkLeft,
+    WalkUp,
+    StabRight,
+    StabDown,
+    StabLeft,
+    StabUp,
 }
