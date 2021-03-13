@@ -1,7 +1,5 @@
 using Godot;
 using System;
-using System.Linq;
-using PrisonLimbo.Scripts.Extensions;
 using PrisonLimbo.Scripts.WorldGenerator;
 namespace PrisonLimbo.Scripts {
 public class GameController : Node
@@ -41,7 +39,6 @@ public class GameController : Node
                 var guardSpawn = _spawner.FindSpawn(guard, Vector2I.Zero, size);
                 if(guardSpawn is Vector2I){
                     _world.AddChild(guard);
-                    GD.Print(guard.GetParent().ToString());
                     guard.MapPosition = (Vector2)guardSpawn;
                 }
             };
