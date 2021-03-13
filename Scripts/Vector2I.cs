@@ -54,6 +54,11 @@ namespace PrisonLimbo.Scripts
             return Adjacent(width, height, X, Y);
         }
 
+         public IEnumerable<(Direction, Vector2I)> AdjacentDirections(int width, int height)
+        {
+            return AdjacentDirections(width, height, X, Y);
+        }
+
         public static IEnumerable<Vector2I> Adjacent(int width, int height, int x, int y)
         {
             if (x < width - 1)
@@ -64,6 +69,17 @@ namespace PrisonLimbo.Scripts
                 yield return new Vector2I(x, y + 1);
             if (y > 0)
                 yield return new Vector2I(x, y - 1);
+        }
+
+        public static IEnumerable<(Direction, Vector2I)> AdjacentDirections(int width, int height, int x, int y){
+            if (x < width - 1)
+                yield return (Direction.Right, new Vector2I(x + 1, y));
+            if (x > 0)
+                yield return (Direction.Left, new Vector2I(x - 1, y));
+            if (y < height - 1)
+                yield return (Direction.Down, new Vector2I(x, y + 1));
+            if (y > 0)
+                yield return (Direction.Up, new Vector2I(x, y - 1));
         }
 
         public static explicit operator Vector2(Vector2I vector)
