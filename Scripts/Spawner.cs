@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Immutable;
 using Godot;
 
 namespace PrisonLimbo.Scripts
@@ -8,10 +7,6 @@ namespace PrisonLimbo.Scripts
     {
         private readonly Random _random;
         private readonly World _world;
-
-        private readonly ImmutableArray<Vector2I> _searchPath;
-
-        private long _searchStep = 0;
 
         public Spawner(Random random, World world)
         {

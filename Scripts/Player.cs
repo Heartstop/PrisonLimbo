@@ -34,13 +34,16 @@ namespace PrisonLimbo.Scripts
                     npc.Health -= Damage;
                     PassTurn();
                 });
-            } else {
+            } else if(World.CanMove(this, newPos)) {
                 _animationController.PlayAnimation(dir.ToAnimationState(), () => {
                     MapPosition = newPos;
                     PassTurn();
                     });
             }
-
+            else
+            {
+                _canMove = true;
+            }
         }
 
         private void PassTurn() {
