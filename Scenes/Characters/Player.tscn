@@ -7,5 +7,6 @@
 script = ExtResource( 2 )
 
 [node name="Pivot" type="Position2D" parent="."]
+position = Vector2( 8, 0 )
 
 [node name="ActorAnimationController" parent="Pivot" instance=ExtResource( 1 )]
