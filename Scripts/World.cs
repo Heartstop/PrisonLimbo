@@ -2,19 +2,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using Godot;
-using PrisonLimbo.Scripts.Extensions;
 using PrisonLimbo.Scripts.WorldGenerator;
 namespace PrisonLimbo.Scripts
 {
     public class World : Node
     {
-        TileMap _tileMap;
-        Random _random = new Random();
-        public override void _Ready()
-        {
-            var roomCells = new RoomMaker(_random, 4, (rand, roomW, roomH) => true).GenerateRooms(20, 20);
+        private TileMap _tileMap;
+        private Random _random;
+
+        public World(Random random, RoomCellAbstract[,] roomCells){
+            _random = random;
             _tileMap = new Decorator(_random).Decorate(roomCells);
 
+        }
+        public override void _Ready()
+        {
             var tileSet = (TileSet)GD.Load("res://Assets/tileset.tres");
             _tileMap.TileSet = tileSet;
             _tileMap.CellSize = new Vector2(16,16);

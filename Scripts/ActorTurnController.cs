@@ -6,14 +6,15 @@ namespace PrisonLimbo.Scripts
 {
     public class ActorTurnController : Node
     {
+        public Player Player { get; set; }
+
+        public World World { get; set; }
         private Boolean _isPlayerTurn = true;
-        private Player _player;
         private Timer _turnTimer;
         private Timer _turnDelay;
         private ProgressBar _timeBar;
         public override void _Ready()
         {
-            _player = GetNode<Player>("../Player");
             _turnTimer = GetNode<Timer>("TurnTimer");
             _turnDelay = GetNode<Timer>("TurnDelay");
             _timeBar = GetNode<ProgressBar>("Timebar");
@@ -26,7 +27,7 @@ namespace PrisonLimbo.Scripts
         public override void _Process(float delta){
             if(_isPlayerTurn) {
                 _timeBar.Value = _turnTimer.TimeLeft;
-                if(_player.TurnProcess()){
+                if(Player.TurnProcess()){
                     _turnTimer.Stop();
                     _timeBar.Value = 0;
                     OnTurnTimerTimeout();
@@ -35,7 +36,7 @@ namespace PrisonLimbo.Scripts
         }
 
         private void RunNpcTurnProcess() {
-            var npcActors = GetParent().GetChildren().OfType<NpcActor>().ToList();
+            var npcActors = World.GetChildren().OfType<NpcActor>().ToList();
             npcActors.ForEach((actor) => actor.TakeTurn());
         }
 
@@ -47,7 +48,7 @@ namespace PrisonLimbo.Scripts
 
         private void OnTurnDelayTimeout() {
             _isPlayerTurn = true;
-            _player.TakeTurn();
+            Player.TakeTurn();
             _turnTimer.Start();
         }
 
