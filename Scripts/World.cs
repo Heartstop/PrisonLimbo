@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using System.Collections.Immutable;
 using Godot;
-using PrisonLimbo.Scripts.Extensions;
 using PrisonLimbo.Scripts.WorldGenerator;
 namespace PrisonLimbo.Scripts
 {
@@ -10,6 +10,9 @@ namespace PrisonLimbo.Scripts
     {
         TileMap _tileMap;
         Random _random = new Random();
+        
+        private static readonly IImmutableSet<Tiles> tilesWithoutCollision = ImmutableHashSet.Create(Tiles.Floor, Tiles.FloorShadow);
+
         public override void _Ready()
         {
             var roomCells = new RoomMaker(_random, 4, (rand, roomW, roomH) => true).GenerateRooms(20, 20);
@@ -31,12 +34,10 @@ namespace PrisonLimbo.Scripts
 
         public bool CanMove<T>(T requestingEntity, Vector2 target) where T : WorldEntity
         {
-            var startPos = requestingEntity.MapPosition;
-            /*
-            var cellIndex = GetCellv(target);
-            if (cellIndex != default)
+            var cell = _tileMap.GetCellv(target);
+            if (!tilesWithoutCollision.Contains((Tiles) cell))
                 return false;
-            */
+            
             return GetEntities(target)
                 .All(we => we.CanEnter(requestingEntity));
         }
