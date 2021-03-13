@@ -1,16 +1,11 @@
+using System;
 using Godot;
 
 namespace PrisonLimbo.Scripts
 {
     public class Guard : NpcActor
     {
-        private ActorAnimationController _animationController;
         private BehaviourState _behaviourState = BehaviourState.Strolling;
-        public override void _Ready()
-        {
-            base._Ready();
-            _animationController = GetNode<ActorAnimationController>("Pivot/ActorAnimationController");
-        }
 
         public override void TakeTurn()
         {   
@@ -19,12 +14,13 @@ namespace PrisonLimbo.Scripts
                     var randomDirection = (Direction)_random.Next(0,5);
                     if(randomDirection == Direction.None || !World.CanMove(this, randomDirection))
                         return;
-                    _animationController.PlayAnimation(randomDirection.ToAnimationState(), () => {
-                        MapPosition = MapPosition + randomDirection.ToVector2();
-                    });
-                    break;   
+                    AnimateMove(randomDirection.ToAnimationState(),MapPosition + randomDirection.ToVector2());
+                    break;
                 }
-                default: break;
+                case BehaviourState.None:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
             
         }

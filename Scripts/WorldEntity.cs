@@ -1,3 +1,4 @@
+using System;
 using Godot;
 
 namespace PrisonLimbo.Scripts
@@ -5,9 +6,10 @@ namespace PrisonLimbo.Scripts
     public abstract class WorldEntity : Node2D
     {   
         [Export]
-        private Vector2 _initialMapPosistion;
+        private Vector2 _initialMapPosistion = default;
         private Vector2 _mapPosition;
-        protected World World = null!;
+        protected World World { get; set; }
+
         public Vector2 MapPosition
         {
             get => _mapPosition;
@@ -25,7 +27,7 @@ namespace PrisonLimbo.Scripts
             base._Ready();
             World = GetParent<World>();
 
-            if(_initialMapPosistion != null && World != null){
+            if(_initialMapPosistion != default){
                 MapPosition = _initialMapPosistion;
             }
         }

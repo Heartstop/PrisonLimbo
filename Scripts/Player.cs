@@ -5,20 +5,8 @@ namespace PrisonLimbo.Scripts
 {
     public class Player : Actor
     {
-        private ActorAnimationController _animationController;
         private bool _canMove = true;
         private bool _passTurn = false;
-
-        public override void _Ready()
-        {
-            base._Ready();
-            _animationController = GetNode<ActorAnimationController>("Pivot/ActorAnimationController");
-        }
-
-        public override void _Process(float delta)
-        {
-            base._Process(delta);
-        }
 
         public override void TakeTurn()
         {
