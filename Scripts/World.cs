@@ -10,16 +10,13 @@ namespace PrisonLimbo.Scripts
         private TileMap _tileMap;
         private Random _random;
 
-        private RoomCellAbstract[,] _roomCells;
-
         public World(Random random, RoomCellAbstract[,] roomCells){
             _random = random;
-            _roomCells = roomCells;
+            _tileMap = new Decorator(_random).Decorate(roomCells);
+
         }
         public override void _Ready()
         {
-            _tileMap = new Decorator(_random).Decorate(_roomCells);
-
             var tileSet = (TileSet)GD.Load("res://Assets/tileset.tres");
             _tileMap.TileSet = tileSet;
             _tileMap.CellSize = new Vector2(16,16);
