@@ -19,6 +19,10 @@ config/name="PrisonLimbo"
 run/main_scene="res://Scenes/Menu.tscn"
 config/icon="res://icon.png"
 
+[audio]
+
+output_latency.web=100
+
 [autoload]
 
 InputSystem="*res://Scripts/Singletons/InputSystem.cs"
