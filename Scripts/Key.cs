@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Godot;
 
 namespace PrisonLimbo.Scripts
@@ -9,39 +10,43 @@ namespace PrisonLimbo.Scripts
         public Lazy<Node2D> Track { get; set; }
         private WorldEntity parent;
         private PackedScene trapdoorInstancer;
+        protected readonly Random RandomSource = new Random();
 
         public override void _ExitTree()
         {
             base._ExitTree();
-            var trapdoor = (WorldEntity)trapdoorInstancer.Instance();
+            var trapdoor = (Trapdoor)trapdoorInstancer.Instance();
             const double targetDistancePercent = 0.25d;
 
-            var targetDistance = new Vector2I(World.MapWidth, World.MapHeight).DistanceStepsL(Vector2I.Zero) * targetDistancePercent;
+            var targetDistance = (long) (new Vector2I(World.MapWidth, World.MapHeight).DistanceStepsL(Vector2I.Zero) * targetDistancePercent);
             var currentPos = parent.MapPosition;
-            long? bestMissDistance = null;
-            Vector2I? bestPoint = null;
+            long? smallestMiss = null;
+            var bestPoints = new List<Vector2I>();
             for (var x = 0; x < World.MapWidth; x++)
-            for(var y = 0; y < World.MapHeight; y++)
+            for (var y = 0; y < World.MapHeight; y++)
             {
                 var point = new Vector2I(x, y);
                 var distance = point.DistanceStepsL(currentPos);
-                var targetMiss = Math.Abs(targetDistance - distance);
-                if(targetMiss > bestMissDistance)
+                var miss = Math.Abs(targetDistance - distance);
+                if(miss > smallestMiss)
                     continue;
 
                 if(!World.CanMove(trapdoor, point))
                     continue;
-                
-                bestMissDistance = distance;
-                bestPoint = point;
-            }
 
-            if (bestPoint is {} spawnPoint)
-                trapdoor.MapPosition = spawnPoint;
-            else
+                if(miss < smallestMiss)
+                    bestPoints.Clear();
+                
+                smallestMiss = miss;
+                bestPoints.Add(point);
+            }
+            
+            if(bestPoints.Count == 0)
                 throw new Exception("How can't we spawn the trapdoor anywhere???");
             
             World.AddChild(trapdoor);
+            var posIndex = RandomSource.Next(0, bestPoints.Count);
+            trapdoor.MapPosition = bestPoints[posIndex];
         }
 
         public override void _Ready()

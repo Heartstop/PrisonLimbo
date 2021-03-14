@@ -47,7 +47,7 @@ namespace PrisonLimbo.Scripts
                 .All(we => we.CanEnter(requestingEntity));
         }
 
-        public Vector2 MapToWorld(Vector2I mapPosition) => (Vector2) (mapPosition * 16);            
+        public static Vector2 MapToWorld(Vector2I mapPosition) => (Vector2) (mapPosition * 16);            
 
         public IEnumerable<WorldEntity> GetEntities(Vector2I position)
         {
