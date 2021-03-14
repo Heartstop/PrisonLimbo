@@ -69,9 +69,11 @@ public class GameController : Node
         }
 
         private void OnPlayerEnterTrapdoor() {
-            _sceneTransition.FadeIn();
-            _roomLevel += 1;
-            GenerateWorld();
+            _sceneTransition.FadeIn(() => {
+                _roomLevel += 1;
+                _world.QueueFree();
+                GenerateWorld();
+            });
         }
 
         private void OnPlayerDeath() {

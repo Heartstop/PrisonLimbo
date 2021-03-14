@@ -39,6 +39,7 @@ namespace PrisonLimbo.Scripts
             _canMove = false;
 
             if(npc != null){
+                SoundSystem.PlayStabSound();
                 AnimationController.PlayAnimation(dir.ToAnimationState(AnimationAction.Stab), () => {
                     npc.ApplyDamage(Damage);
                     PassTurn();
@@ -48,6 +49,7 @@ namespace PrisonLimbo.Scripts
             } else if(World.CanMove(this, newPos)) {
                 AnimationController.PlayAnimation(dir.ToAnimationState(), () => {
                     MapPosition = newPos;
+                    SoundSystem.PlayStepSound();
                     PassTurn();
                     });
             }

@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/Step3.wav-8e008c5a6a0cb3e5b13b61ce5e3c69c3.sample"
+
+[deps]
+
+source_file="res://Assets/Sounds/Step3.wav"
+dest_files=[ "res://.import/Step3.wav-8e008c5a6a0cb3e5b13b61ce5e3c69c3.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

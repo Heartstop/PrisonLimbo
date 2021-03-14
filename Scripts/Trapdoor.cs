@@ -10,6 +10,7 @@ namespace PrisonLimbo.Scripts
         {
             base._Ready();
             _animationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
+            _animationPlayer.Play("open");
         }
 
         public override bool CanEnter<T>(T entity) => !(entity is NpcActor);

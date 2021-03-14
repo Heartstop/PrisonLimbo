@@ -22,6 +22,7 @@ config/icon="res://icon.png"
 [autoload]
 
 InputSystem="*res://Scripts/Singletons/InputSystem.cs"
+SoundSystem="*res://Scripts/Singletons/SoundSystem.cs"
 
 [display]
 

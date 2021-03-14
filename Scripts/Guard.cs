@@ -44,9 +44,12 @@ namespace PrisonLimbo.Scripts
 
                     if (stabDirection != default)
                     {
-                        AnimationController.PlayAnimation(stabDirection.ToAnimationState(AnimationAction.Stab), () => {
-                            player.ApplyDamage(Damage);
-                        });
+                        if(Health > 0) {
+                            SoundSystem.PlayStabSound();
+                            AnimationController.PlayAnimation(stabDirection.ToAnimationState(AnimationAction.Stab), () => {
+                                player.ApplyDamage(Damage);
+                            });
+                        }
                         break;
                     }
 
