@@ -53,7 +53,7 @@ namespace PrisonLimbo.Scripts
                     var path = player
                         .MapPosition
                         .AdjacentUnbound()
-                        .OrderBy(v => v.DistanceSquaredUL(MapPosition))
+                        .OrderBy(v => v.DistanceStepsL(MapPosition))
                         .Select(Path)
                         .FirstOrDefault(p => p != null)?
                         .ToImmutableArray();

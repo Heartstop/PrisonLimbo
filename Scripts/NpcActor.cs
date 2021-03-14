@@ -31,7 +31,7 @@ namespace PrisonLimbo.Scripts
             if (!World.CanMove(this, destination))
                 return null;
             
-            var toExplore = new SimplePriorityQueue<Vector2I, ulong>();
+            var toExplore = new SimplePriorityQueue<Vector2I, long>();
             toExplore.Enqueue(start, default);
             var visited = new Dictionary<Vector2I, int> {[start] = 0};
             var worldForbidden = new HashSet<Vector2I>();
@@ -60,7 +60,8 @@ namespace PrisonLimbo.Scripts
 
                 return steps;
             }
-            
+
+            var destinationFound = false;
             while (toExplore.Count > 0)
             {
                 var explore = toExplore.Dequeue();
@@ -70,6 +71,9 @@ namespace PrisonLimbo.Scripts
                         continue;
                     
                     var neighbourSteps = visited[explore] + 1;
+                    if(destinationFound && visited[destination] < neighbourSteps)
+                        continue;
+
                     var visitedBefore = visited.TryGetValue(neighbour, out var previousVisitWalk);
                     switch (visitedBefore)
                     {
@@ -81,14 +85,14 @@ namespace PrisonLimbo.Scripts
                         default:
                             visited[neighbour] = neighbourSteps;
                             if (neighbour == destination)
-                                return MakePath();
-                            toExplore.EnqueueWithoutDuplicates(neighbour, neighbour.DistanceSquaredUL(destination));
+                                destinationFound = true;
+                            toExplore.EnqueueWithoutDuplicates(neighbour, neighbour.DistanceStepsL(destination));
                             break;
                     }
                 }
             }
 
-            return null;
+            return destinationFound ? MakePath() : null;
         }
 
         protected IEnumerable<Direction> GetStroll()

@@ -31,6 +31,10 @@ namespace PrisonLimbo.Scripts
         public double DistanceReal(Vector2I other) => Math.Sqrt(DistanceSquaredUL(other));
 
         [Pure]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public long DistanceStepsL(Vector2I other) => Math.Abs((long)X - other.X) + Math.Abs((long)Y - other.Y);
+
+        [Pure]
         public override bool Equals(object? obj)
         {
             return obj is Vector2I other && Equals(other);
