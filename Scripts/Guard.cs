@@ -56,6 +56,7 @@ namespace PrisonLimbo.Scripts
                     var path = player
                         .MapPosition
                         .AdjacentUnbound()
+                        .Shuffle(RandomSource)
                         .OrderBy(v => v.DistanceStepsL(MapPosition))
                         .Select(Path)
                         .FirstOrDefault(p => p != null)?
