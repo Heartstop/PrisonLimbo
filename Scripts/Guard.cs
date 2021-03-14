@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
 using Godot;
 using PrisonLimbo.Scripts.Extensions;
 
@@ -9,6 +11,7 @@ namespace PrisonLimbo.Scripts
     {
         private BehaviourState _behaviourState = BehaviourState.Strolling;
         private readonly PackedScene _actorAnimationControllerInstancer = GD.Load<PackedScene>("Scenes/Characters/ActorAnimationController.tscn");
+        private const int AttackSight = 20;
 
         private Queue<Direction> _strollPath;
 
@@ -31,11 +34,45 @@ namespace PrisonLimbo.Scripts
                     break;
                 }
                 case BehaviourState.Attack:
-                    throw new NotImplementedException();
+                    var player = World.GetNode<Player>("Player");
+
+                    var stabDirection = player.MapPosition
+                        .AdjacentDirectionsUnbound()
+                        .Where(pos => pos.Item2 == MapPosition)
+                        .Select(d => d.Item1.Invert())
+                        .FirstOrDefault();
+
+                    if (stabDirection != default)
+                    {
+                        AnimationController.PlayAnimation(stabDirection.ToAnimationState(AnimationAction.Stab), () => {
+                            player.ApplyDamage(Damage);
+                        });
+                        break;
+                    }
+
+                    var path = player
+                        .MapPosition
+                        .AdjacentUnbound()
+                        .OrderBy(v => v.DistanceSquaredUL(MapPosition))
+                        .Select(Path)
+                        .FirstOrDefault(p => p != null)?
+                        .ToImmutableArray();
+                    
+                    if(!(path is ImmutableArray<Direction> chosenPath))
+                        break;
+
+                    if (chosenPath.Length > AttackSight)
+                    {
+                        _behaviourState = BehaviourState.Strolling;
+                        break;
+                    }
+                    
+                    Step(chosenPath.First());
+
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            
         }
 
         public override bool TurnProcess()
