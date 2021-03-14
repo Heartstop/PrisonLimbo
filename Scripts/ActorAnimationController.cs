@@ -7,7 +7,7 @@ public class ActorAnimationController : AnimatedSprite
 
     private Vector2 _startPosition;
 
-    private Action postAnimation = null;
+    private Action _postAnimation = null;
 
     public override void _Ready()
     {
@@ -22,15 +22,15 @@ public class ActorAnimationController : AnimatedSprite
 
     public void PlayAnimation(AnimationState animation, Action after)
     {
-        postAnimation = after;
+        _postAnimation = after;
         PlayAnimation(animation);
     }
 
     public void OnAnimationPlayerFinished(string animationName)
     {
         Position = _startPosition;
-        postAnimation();
-        postAnimation = null;
+        _postAnimation();
+        _postAnimation = null;
     }
 }
 

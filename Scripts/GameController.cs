@@ -29,18 +29,18 @@ public class GameController : Node
 
             var player = (Player)_playerInstancer.Instance();
             var playerSpawn = _spawner.FindSpawn(player, Vector2I.Zero, size);
-            if(playerSpawn is Vector2I){
+            if(playerSpawn is Vector2I ps){
                 _world.AddChild(player);
-                player.MapPosition = (Vector2)playerSpawn;
+                player.MapPosition = ps;
                 _actorTurnController.Player = player;
             }
         
             for(var i = 0; i < GenerateAmountOfGuards();i++){
                 var guard = (Guard)_guardInstancer.Instance();
                 var guardSpawn = _spawner.FindSpawn(guard, Vector2I.Zero, size);
-                if(guardSpawn is Vector2I){
+                if(guardSpawn is Vector2I gs){
                     _world.AddChild(guard);
-                    guard.MapPosition = (Vector2)guardSpawn;
+                    guard.MapPosition = gs;
                 }
             };
         }
