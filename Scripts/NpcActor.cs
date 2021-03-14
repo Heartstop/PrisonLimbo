@@ -160,7 +160,7 @@ namespace PrisonLimbo.Scripts
         {
             base.ApplyDamage(damage);
 
-            var soundDistance = Health > 0 ? 20 : 10;
+            var soundDistance = Health > 0 ? 10 : 5;
             
             foreach (var guard in World
                 .GetChildren()
