@@ -8,7 +8,8 @@ namespace PrisonLimbo.Scripts
     {
         private bool _canMove = true;
         private bool _passTurn = false;
-        public Action OnEnterTrapdoor {get; set;} = null;
+        public Action OnEnterTrapdoor { get; set; } = null;
+        public Action OnDeath { get; set; } = null;
         public override void TakeTurn()
         {
             _passTurn = false;
@@ -22,7 +23,7 @@ namespace PrisonLimbo.Scripts
 
         public override void Die()
         {
-            throw new System.NotImplementedException();
+            OnDeath!.Invoke();
         }
 
         private void ProcessMove()

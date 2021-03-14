@@ -36,6 +36,7 @@ public class GameController : Node
 
             var player = (Player)_playerInstancer.Instance();
             player.OnEnterTrapdoor = OnPlayerEnterTrapdoor;
+            player.OnDeath = OnPlayerDeath;
             var playerSpawn = _spawner.FindSpawn(player, Vector2I.Zero, size);
             if(playerSpawn is Vector2I ps){
                 _world.AddChild(player);
@@ -60,6 +61,11 @@ public class GameController : Node
             _roomLevel += 1;
             GenerateWorld();
         }
+
+        private void OnPlayerDeath() {
+            GetTree().ChangeScene("Scenes/Menu.tscn");
+        }
+
         private Vector2I GenerateRoomSize() => new Vector2I((int)Math.Round(8+(_roomLevel * 0.8)),(int)Math.Round(8+(_roomLevel * 0.8)));
         
 
