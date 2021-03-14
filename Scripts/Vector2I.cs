@@ -7,6 +7,7 @@ using PrisonLimbo.Scripts.Extensions;
 
 namespace PrisonLimbo.Scripts
 {
+    [Serializable]
     public readonly struct Vector2I : IEquatable<Vector2I>
     {
         public static Vector2I Zero = new Vector2I(0,0);
@@ -67,6 +68,10 @@ namespace PrisonLimbo.Scripts
         {
             return new Vector2I(left.X - right.X, left.Y - right.Y);
         }
+
+        [Pure]
+        public static Vector2I operator *(Vector2I vector, int factor)
+            => new Vector2I(vector.X * factor, vector.Y * factor);
 
         [Pure]
         public IEnumerable<Vector2I> Adjacent(int width, int height)

@@ -22,7 +22,7 @@ namespace PrisonLimbo.Scripts
         private void ProcessMove()
         {
             var dir = InputSystem.Direction;
-            var newPos = MapPosition + dir.ToVector2();
+            var newPos = MapPosition + dir.ToVector2I();
             if (dir == Direction.None || !_canMove || _passTurn)
                 return;
             

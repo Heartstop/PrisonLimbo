@@ -4,25 +4,33 @@ using System.Collections.Immutable;
 using System.Linq;
 using Godot;
 using Priority_Queue;
+using PrisonLimbo.Scripts.Extensions;
 
 namespace PrisonLimbo.Scripts
 {
     public abstract class NpcActor : Actor
     {
-        protected readonly Random Random = new Random();
+        protected readonly Random RandomSource = new Random();
 
         protected bool Step(Direction direction)
         {
-            if(direction == Direction.None || !World.CanMove(this, direction))
+            if (direction == Direction.None)
+                return true;
+            if(!World.CanMove(this, direction))
                 return false;
-            AnimateMove(direction.ToAnimationState(), MapPosition + direction.ToVector2());
+            AnimateMove(direction.ToAnimationState(), MapPosition + direction.ToVector2I());
             return true;
         }
 
-        protected IEnumerable<Direction>? Path(Vector2I start, Vector2I end)
+        protected IEnumerable<Direction>? Path(Vector2I destination)
         {
-            if(start == end)
+            var start = MapPosition;
+            if(start == destination)
                 return ImmutableList<Direction>.Empty;
+
+            // So we don't search the entire map when it is blocked...
+            if (!World.CanMove(this, destination))
+                return null;
             
             var toExplore = new SimplePriorityQueue<Vector2I, ulong>();
             toExplore.Enqueue(start, default);
@@ -31,14 +39,16 @@ namespace PrisonLimbo.Scripts
 
             IEnumerable<Direction> MakePath()
             {
-                var totalSteps = visited[end];
+                var totalSteps = visited[destination];
                 var steps = new Direction[totalSteps];
 
-                var current = end;
+                var current = destination;
                 for (var i = totalSteps - 1; i >= 0; i--)
                 {
                     var (newDir, newPos) = current
                         .AdjacentDirectionsUnbound()
+                        //Shuffle to make the walk more random.
+                        .Shuffle(RandomSource)
                         .First(v =>
                         {
                             var found = visited.TryGetValue(v.Item2, out var step);
@@ -55,7 +65,7 @@ namespace PrisonLimbo.Scripts
             while (toExplore.Count > 0)
             {
                 var explore = toExplore.Dequeue();
-                foreach (var neighbour in explore.AdjacentUnbound())
+                foreach (var neighbour in explore.AdjacentUnbound().Shuffle(RandomSource))
                 {
                     if(worldForbidden.Contains(neighbour))
                         continue;
@@ -71,9 +81,9 @@ namespace PrisonLimbo.Scripts
                             continue;
                         default:
                             visited[neighbour] = neighbourSteps;
-                            if (neighbour == end)
+                            if (neighbour == destination)
                                 return MakePath();
-                            toExplore.EnqueueWithoutDuplicates(neighbour, neighbour.DistanceSquaredUL(end));
+                            toExplore.EnqueueWithoutDuplicates(neighbour, neighbour.DistanceSquaredUL(destination));
                             break;
                     }
                 }
@@ -81,14 +91,26 @@ namespace PrisonLimbo.Scripts
 
             return null;
         }
-        
-        public IEnumerable<Direction> GetStroll()
+
+        protected IEnumerable<Direction> GetStroll()
         {
+            var player = World.GetNode<Player>("Player");
+            
+            var strollPath =
+                player
+                .MapPosition
+                .AdjacentUnbound()
+                .Select(Path)
+                .FirstOrDefault(w => w != null);
+            if (strollPath == null)
+                return ImmutableArray.Create(Direction.None);
+            
             return Enumerable
-                .Repeat(Direction.None, Random.Next(2, 5));
+                .Repeat(Direction.None, RandomSource.Next(2, 5))
+                .Concat(strollPath);
         }
         
-        protected void AnimateMove(AnimationState animationState, Vector2 newPosition, Action? postAnimation = null)
+        protected void AnimateMove(AnimationState animationState, Vector2I newPosition, Action? postAnimation = null)
         {
             var mark = new NpcMoveMark(World, this, newPosition);
             World.AddChild(mark);

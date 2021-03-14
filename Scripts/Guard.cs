@@ -22,15 +22,14 @@ namespace PrisonLimbo.Scripts
                     if (_strollPath == null || _strollPath.Count == 0)
                         _strollPath = GetStroll().ToQueue();
 
-                    var stepdir = _strollPath.Dequeue();
-                    var steppedSuccess = Step(stepdir);
+                    var stepDir = _strollPath.Dequeue();
+                    var steppedSuccess = Step(stepDir);
                     if (!steppedSuccess)
                         _strollPath = null;
                     break;
                 }
                 case BehaviourState.Attack:
-                    
-                    break;
+                    throw new NotImplementedException();
                 default:
                     throw new ArgumentOutOfRangeException();
             }

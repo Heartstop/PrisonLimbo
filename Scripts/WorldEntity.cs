@@ -3,19 +3,24 @@ using Godot;
 namespace PrisonLimbo.Scripts
 {
     public abstract class WorldEntity : Node2D
-    {   
+    {
+        #pragma warning disable CS0649
         [Export]
-        private Vector2 _initialMapPosistion = default;
-        private Vector2 _mapPosition;
+        private int _initialMapPositionX;
+        [Export]
+        private int _initialMapPositionY;
+        #pragma warning restore CS0649
+        
+        private Vector2I _mapPosition;
         protected World World { get; set; }
 
-        public Vector2 MapPosition
+        public Vector2I MapPosition
         {
             get => _mapPosition;
             set
             {
                 _mapPosition = value;
-                ZIndex = (int) _mapPosition.y;
+                ZIndex = _mapPosition.Y;
                 Position = World.MapToWorld(value);
             }
         }
@@ -28,8 +33,8 @@ namespace PrisonLimbo.Scripts
             ZAsRelative = false;
             World = GetParent<World>();
 
-            if(_initialMapPosistion != default){
-                MapPosition = _initialMapPosistion;
+            if(_initialMapPositionX != default || _initialMapPositionY != default){
+                MapPosition = new Vector2I(_initialMapPositionX, _initialMapPositionY);
             }
         }
     }

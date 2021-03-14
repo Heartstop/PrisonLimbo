@@ -11,9 +11,13 @@ namespace PrisonLimbo.Scripts
         private TileMap _tileMap;
         private Random _random;
         private static readonly IImmutableSet<Tiles> TilesWithoutCollision = ImmutableHashSet.Create(Tiles.Floor, Tiles.FloorShadow);
+        public int MapWidth { get; }
+        public int MapHeight { get; }
 
         public World(Random random, RoomCellAbstract[,] roomCells){
             _random = random;
+            MapWidth = roomCells.GetLength(0);
+            MapHeight = roomCells.GetLength(1);
             _tileMap = new Decorator(_random).Decorate(roomCells);
         }
         
@@ -29,16 +33,13 @@ namespace PrisonLimbo.Scripts
 
         public bool CanMove<T>(T requestingEntity, Direction direction) where T : WorldEntity
         {
-            var newPos = requestingEntity.MapPosition + direction.ToVector2();
+            var newPos = requestingEntity.MapPosition + direction.ToVector2I();
             return CanMove(requestingEntity, newPos);
         }
 
         public bool CanMove<T>(T requestingEntity, Vector2I target) where T : WorldEntity
-            => CanMove(requestingEntity, (Vector2) target);
-
-        public bool CanMove<T>(T requestingEntity, Vector2 target) where T : WorldEntity
         {
-            var cell = _tileMap.GetCellv(target);
+            var cell = _tileMap.GetCellv((Vector2) target);
             if (!TilesWithoutCollision.Contains((Tiles) cell))
                 return false;
             
@@ -46,9 +47,9 @@ namespace PrisonLimbo.Scripts
                 .All(we => we.CanEnter(requestingEntity));
         }
 
-        public Vector2 MapToWorld(Vector2 mapPosistion) => mapPosistion * 16;            
+        public Vector2 MapToWorld(Vector2I mapPosition) => (Vector2) (mapPosition * 16);            
 
-        public IEnumerable<WorldEntity> GetEntities(Vector2 position)
+        public IEnumerable<WorldEntity> GetEntities(Vector2I position)
         {
             return GetChildren()
                 .OfType<WorldEntity>()
