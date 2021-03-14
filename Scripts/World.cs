@@ -8,16 +8,17 @@ namespace PrisonLimbo.Scripts
 {
     public class World : Node
     {
-        TileMap _tileMap;
-        Random _random = new Random();
-        
+        private TileMap _tileMap;
+        private Random _random;
         private static readonly IImmutableSet<Tiles> TilesWithoutCollision = ImmutableHashSet.Create(Tiles.Floor, Tiles.FloorShadow);
 
+        public World(Random random, RoomCellAbstract[,] roomCells){
+            _random = random;
+            _tileMap = new Decorator(_random).Decorate(roomCells);
+        }
+        
         public override void _Ready()
         {
-            var roomCells = new RoomMaker(_random, 4, (rand, roomW, roomH) => true).GenerateRooms(20, 20);
-            _tileMap = new Decorator(_random).Decorate(roomCells);
-
             var tileSet = (TileSet)GD.Load("res://Assets/tileset.tres");
             _tileMap.TileSet = tileSet;
             _tileMap.CellSize = new Vector2(16,16);

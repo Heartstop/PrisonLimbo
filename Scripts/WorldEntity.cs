@@ -15,6 +15,7 @@ namespace PrisonLimbo.Scripts
             set
             {
                 _mapPosition = value;
+                ZIndex = (int) _mapPosition.y;
                 Position = World.MapToWorld(value);
             }
         }
@@ -24,6 +25,7 @@ namespace PrisonLimbo.Scripts
         public override void _Ready()
         {
             base._Ready();
+            ZAsRelative = false;
             World = GetParent<World>();
 
             if(_initialMapPosistion != default){

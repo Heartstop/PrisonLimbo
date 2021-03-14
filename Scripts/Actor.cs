@@ -16,15 +16,13 @@ namespace PrisonLimbo.Scripts
         public override void _Ready()
         {
             base._Ready();
-            ZAsRelative = false;
-            ZIndex = (int) Position.y;
             AnimationController = GetNode<ActorAnimationController>("Pivot/ActorAnimationController");
         }
 
         public override void _Process(float delta)
         {
             base._Process(delta);
-            if(Health < 0){
+            if(Health <= 0){
                 QueueFree();
             }
         }

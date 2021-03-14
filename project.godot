@@ -16,12 +16,22 @@ _global_script_class_icons={
 [application]
 
 config/name="PrisonLimbo"
-run/main_scene="res://Scenes/World.tscn"
 config/icon="res://icon.png"
 
 [autoload]
 
 InputSystem="*res://Scripts/Singletons/InputSystem.cs"
+
+[display]
+
+window/size/width=1920
+window/size/height=1080
+window/stretch/mode="viewport"
+window/stretch/aspect="keep_height"
+
+[mono]
+
+debugger_agent/wait_for_debugger=true
 
 [rendering]
 
