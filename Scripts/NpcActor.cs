@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using Godot;
 using Priority_Queue;
 using PrisonLimbo.Scripts.Extensions;
 
@@ -32,7 +31,7 @@ namespace PrisonLimbo.Scripts
             if (!World.CanMove(this, destination))
                 return null;
             
-            var toExplore = new SimplePriorityQueue<Vector2I, ulong>();
+            var toExplore = new SimplePriorityQueue<Vector2I, long>();
             toExplore.Enqueue(start, default);
             var visited = new Dictionary<Vector2I, int> {[start] = 0};
             var worldForbidden = new HashSet<Vector2I>();
@@ -61,16 +60,20 @@ namespace PrisonLimbo.Scripts
 
                 return steps;
             }
-            
+
+            var destinationFound = false;
             while (toExplore.Count > 0)
             {
                 var explore = toExplore.Dequeue();
-                foreach (var neighbour in explore.AdjacentUnbound().Shuffle(RandomSource))
+                foreach (var neighbour in explore.AdjacentUnbound())
                 {
                     if(worldForbidden.Contains(neighbour))
                         continue;
                     
                     var neighbourSteps = visited[explore] + 1;
+                    if(destinationFound && visited[destination] < neighbourSteps)
+                        continue;
+
                     var visitedBefore = visited.TryGetValue(neighbour, out var previousVisitWalk);
                     switch (visitedBefore)
                     {
@@ -82,32 +85,64 @@ namespace PrisonLimbo.Scripts
                         default:
                             visited[neighbour] = neighbourSteps;
                             if (neighbour == destination)
-                                return MakePath();
-                            toExplore.EnqueueWithoutDuplicates(neighbour, neighbour.DistanceSquaredUL(destination));
+                                destinationFound = true;
+                            toExplore.EnqueueWithoutDuplicates(neighbour, neighbour.DistanceStepsL(destination));
                             break;
                     }
                 }
             }
 
-            return null;
+            return destinationFound ? MakePath() : null;
         }
 
         protected IEnumerable<Direction> GetStroll()
         {
-            var player = World.GetNode<Player>("Player");
-            
-            var strollPath =
-                player
-                .MapPosition
-                .AdjacentUnbound()
-                .Select(Path)
-                .FirstOrDefault(w => w != null);
-            if (strollPath == null)
-                return ImmutableArray.Create(Direction.None);
-            
+            var toExplore = new Queue<Vector2I>();
+            toExplore.Enqueue(MapPosition);
+            var visited = new Dictionary<Vector2I, int> {{MapPosition, 0}};
+            var worldBlocked = new HashSet<Vector2I>();
+            while (toExplore.Count > 0)
+            {
+                var explore = toExplore.Dequeue();
+                foreach (var neighbour in explore.AdjacentUnbound())
+                {
+                    if(visited.ContainsKey(neighbour) || worldBlocked.Contains(neighbour))
+                        continue;
+                    
+                    if (!World.CanMove(this, neighbour))
+                    {
+                        worldBlocked.Add(neighbour);
+                        continue;
+                    }
+                    
+                    visited.Add(neighbour, visited[explore] + 1);
+                    toExplore.Enqueue(neighbour);
+                }
+            }
+
+            var destination = visited.GetRandom(RandomSource);
+            var path = new Direction[destination.Value];
+            var current = destination.Key;
+
+            for (var i = destination.Value - 1; i >= 0; i--)
+            {
+                var (newDir, newPos) = current
+                    .AdjacentDirectionsUnbound()
+                    //Shuffle to make the walk more random.
+                    .Shuffle(RandomSource)
+                    .First(v =>
+                    {
+                        var found = visited.TryGetValue(v.Item2, out var step);
+                        return found && step == i;
+                    });
+
+                current = newPos;
+                path[i] = newDir.Invert();
+            }
+
             return Enumerable
                 .Repeat(Direction.None, RandomSource.Next(2, 5))
-                .Concat(strollPath);
+                .Concat(path);
         }
         
         protected void AnimateMove(AnimationState animationState, Vector2I newPosition, Action? postAnimation = null)
@@ -119,6 +154,21 @@ namespace PrisonLimbo.Scripts
                 mark.QueueFree();
                 postAnimation?.Invoke();
             });
+        }
+
+        public override void ApplyDamage(float damage)
+        {
+            base.ApplyDamage(damage);
+
+            var soundDistance = Health > 0 ? 20 : 10;
+            
+            foreach (var guard in World
+                .GetChildren()
+                .OfType<Guard>()
+                .Where(g => g.MapPosition.DistanceStepsL(MapPosition) <= soundDistance))
+            {
+                guard.Alert();
+            }
         }
     }
 }

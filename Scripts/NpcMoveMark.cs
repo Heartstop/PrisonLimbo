@@ -1,5 +1,3 @@
-using Godot;
-
 namespace PrisonLimbo.Scripts
 {
     public class NpcMoveMark : WorldEntity

@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics.Contracts;
-using Godot;
 using PrisonLimbo.Scripts;
 
 public static class DirectionExtensions
