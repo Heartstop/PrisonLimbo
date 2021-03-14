@@ -30,6 +30,9 @@ namespace PrisonLimbo.Scripts
             return false;
         }
 
-
+        public override void Die()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

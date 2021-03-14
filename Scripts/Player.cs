@@ -19,6 +19,11 @@ namespace PrisonLimbo.Scripts
             return _passTurn;
         }
 
+        public override void Die()
+        {
+            throw new System.NotImplementedException();
+        }
+
         private void ProcessMove()
         {
             var dir = InputSystem.Direction;
@@ -31,7 +36,7 @@ namespace PrisonLimbo.Scripts
 
             if(npc != null){
                 _animationController.PlayAnimation(dir.ToAnimationState(AnimationAction.Stab), () => {
-                    npc.Health -= Damage;
+                    npc.ApplyDamage(Damage);
                     PassTurn();
                 });
             } else if(World.CanMove(this, newPos)) {

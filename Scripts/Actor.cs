@@ -4,8 +4,9 @@ namespace PrisonLimbo.Scripts
     public abstract class Actor : WorldEntity
     {
         protected ActorAnimationController _animationController;
+
         [Export]
-        public float Health { get; set; } = 100;
+        public float Health { get; private set; } = 100;
         [Export]
         public float Damage { get; set; } = 50;
         public override bool CanEnter<T>(T entity)
@@ -24,11 +25,18 @@ namespace PrisonLimbo.Scripts
         public override void _Process(float delta)
         {
             base._Process(delta);
-            if(Health < 0){
+        }
+
+        public void ApplyDamage(float damage){
+            Health -= damage;
+            if(Health <= 0)
+            {
+                Die();
                 QueueFree();
             }
         }
 
+        public abstract void Die();
         
         public abstract void TakeTurn();
         public abstract bool TurnProcess();
