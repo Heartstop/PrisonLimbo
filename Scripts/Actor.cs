@@ -17,8 +17,6 @@ namespace PrisonLimbo.Scripts
         public override void _Ready()
         {
             base._Ready();
-            ZAsRelative = false;
-            ZIndex = (int) Position.y;
             _animationController = GetNode<ActorAnimationController>("Pivot/ActorAnimationController");
         }
 
