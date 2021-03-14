@@ -7,7 +7,8 @@ namespace PrisonLimbo.Scripts
     {
         private AnimationPlayer _animationPlayer;
         public override void _Ready()
-        {   
+        {
+            base._Ready();
             _animationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
         }
 

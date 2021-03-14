@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Threading;
 using PrisonLimbo.Scripts.WorldGenerator;
 using PrisonLimbo.Scripts.Extensions;
 namespace PrisonLimbo.Scripts {
@@ -13,6 +14,7 @@ public class GameController : Node
         private Random _random = new Random();
         private PackedScene _guardInstancer = GD.Load<PackedScene>("res://Scenes/Characters/Guard.tscn");
         private PackedScene _playerInstancer = GD.Load<PackedScene>("res://Scenes/Characters/Player.tscn");
+        private PackedScene _keyInstancer = GD.Load<PackedScene>("res://Scenes/Key.tscn");
         private int _roomLevel = 1;
         public override void _Ready()
         {
@@ -46,12 +48,22 @@ public class GameController : Node
         
             for(var i = 0; i < GenerateAmountOfGuards();i++){
                 var guard = (Guard)_guardInstancer.Instance();
+                if (i == 0)
+                {
+                    var key = (Key) _keyInstancer.Instance();
+                    key.World = _world;
+                    key.Track = new Lazy<Node2D>(() => guard.AnimationController, LazyThreadSafetyMode.None);
+                    guard.AddChild(key);
+                }
                 var guardSpawn = _spawner.FindSpawn(guard, Vector2I.Zero, size);
                 if(guardSpawn is Vector2I gs){
                     _world.AddChild(guard);
                     guard.MapPosition = gs;
+                } else if (i == 0)
+                {
+                    throw new InvalidOperationException("We can't even fit a single guard...");
                 }
-            };
+            }
 
             _sceneTransition.FadeOut();
         }
