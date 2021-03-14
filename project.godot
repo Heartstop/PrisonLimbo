@@ -22,6 +22,17 @@ config/icon="res://icon.png"
 
 InputSystem="*res://Scripts/Singletons/InputSystem.cs"
 
+[display]
+
+window/size/width=1920
+window/size/height=1080
+window/stretch/mode="viewport"
+window/stretch/aspect="keep_height"
+
+[mono]
+
+debugger_agent/wait_for_debugger=true
+
 [rendering]
 
 quality/2d/use_pixel_snap=true
