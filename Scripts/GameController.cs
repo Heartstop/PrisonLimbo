@@ -12,6 +12,7 @@ public class GameController : Node
         private ActorTurnController _actorTurnController;
         private SceneTransition _sceneTransition;
         private Label _levelLabel;
+        private Label _tutorialLabel;
         private readonly Random _random = new Random();
         private readonly PackedScene _guardInstancer = GD.Load<PackedScene>("res://Scenes/Characters/Guard.tscn");
         private readonly PackedScene _playerInstancer = GD.Load<PackedScene>("res://Scenes/Characters/Player.tscn");
@@ -20,9 +21,9 @@ public class GameController : Node
         public override void _Ready()
         {
             _levelLabel = GetNode<Label>("GUILayer/TopContainer/HBoxContainer/Level");
+            _tutorialLabel = GetNode<Label>("GUILayer/TutorialLabel");
             _actorTurnController = GetNode<ActorTurnController>("ActorTurnController");
             _sceneTransition = GetNode<SceneTransition>("GUILayer/SceneTransition");
-            
             GenerateWorld();
         }
 
@@ -42,14 +43,9 @@ public class GameController : Node
             var tutorialText = TutorialText();
             if (tutorialText != null)
             {
-                var tutorial = new Label
-                {
-                    Text = tutorialText,
-                    Align = Label.AlignEnum.Center,
-                    Valign = Label.VAlign.Center,
-                    RectPosition = new Vector2(-8 * _world.MapWidth, -16)
-                };
-                _world.AddChild(tutorial);
+                _tutorialLabel.Text = tutorialText;
+            } else if(_roomLevel > 1){
+                _tutorialLabel.Visible = false;
             }
             
             player.OnEnterTrapdoor = OnPlayerEnterTrapdoor;
@@ -87,10 +83,10 @@ public class GameController : Node
         {
             return _roomLevel switch
             {
-                1 => "Walk into enemies to stab them.",
-                2 => "Stabbing an unsuspecting victim deals 3x damage.",
-                3 => "Enemies who witness murder will attack.",
-                4 => "Enemies who survive attacks will yell for help.",
+                1 => null,
+                2 => "Stabbing an unsuspecting victim kills them instantly, others need to be stabbed twice.",
+                3 => "The timer at the bottom repressents how much time you have to make a decicion before your turn passes. You can pass the turn yourself by pressing space.",
+                4 => "Guards who witness a murder will attack, and guards who survive attacks will yell for help.",
                 _ => null
             };
         }
