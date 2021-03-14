@@ -25,13 +25,15 @@ namespace PrisonLimbo.Scripts
         }
 
         public virtual void ApplyDamage(float damage){
-            Health -= damage;
+            Health -= DamageModify(damage);
             if(Health <= 0)
             {
                 Die();
                 QueueFree();
             }
         }
+
+        protected virtual float DamageModify(float damage) => damage;
 
         public abstract void Die();
         

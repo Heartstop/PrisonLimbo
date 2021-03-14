@@ -58,7 +58,7 @@ namespace PrisonLimbo.Scripts
                         .FirstOrDefault(p => p != null)?
                         .ToImmutableArray();
                     
-                    if(!(path is ImmutableArray<Direction> chosenPath))
+                    if(!(path is { } chosenPath))
                         break;
 
                     if (chosenPath.Length > AttackSight)
@@ -80,6 +80,13 @@ namespace PrisonLimbo.Scripts
         public override bool TurnProcess()
         {
             return false;
+        }
+
+        protected override float DamageModify(float damage)
+        {
+            return _behaviourState == BehaviourState.Strolling
+                ? base.DamageModify(damage * 3)
+                : base.DamageModify(damage);
         }
 
         public override void Die()
