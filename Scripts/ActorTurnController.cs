@@ -17,7 +17,7 @@ namespace PrisonLimbo.Scripts
         {
             _turnTimer = GetNode<Timer>("TurnTimer");
             _turnDelay = GetNode<Timer>("TurnDelay");
-            _timeBar = GetNode<ProgressBar>("../GUILayer/VBox/Timebar");
+            _timeBar = GetNode<ProgressBar>("../GUILayer/BottomContainer/Timebar");
 
 
             _timeBar.MaxValue = _turnTimer.WaitTime;
