@@ -3,6 +3,7 @@ using System;
 using System.Threading;
 using PrisonLimbo.Scripts.WorldGenerator;
 using PrisonLimbo.Scripts.Extensions;
+
 namespace PrisonLimbo.Scripts {
 public class GameController : Node
 {
@@ -11,10 +12,10 @@ public class GameController : Node
         private ActorTurnController _actorTurnController;
         private SceneTransition _sceneTransition;
         private Label _levelLabel;
-        private Random _random = new Random();
-        private PackedScene _guardInstancer = GD.Load<PackedScene>("res://Scenes/Characters/Guard.tscn");
-        private PackedScene _playerInstancer = GD.Load<PackedScene>("res://Scenes/Characters/Player.tscn");
-        private PackedScene _keyInstancer = GD.Load<PackedScene>("res://Scenes/Key.tscn");
+        private readonly Random _random = new Random();
+        private readonly PackedScene _guardInstancer = GD.Load<PackedScene>("res://Scenes/Characters/Guard.tscn");
+        private readonly PackedScene _playerInstancer = GD.Load<PackedScene>("res://Scenes/Characters/Player.tscn");
+        private readonly PackedScene _keyInstancer = GD.Load<PackedScene>("res://Scenes/Key.tscn");
         private int _roomLevel = 1;
         public override void _Ready()
         {
@@ -37,6 +38,20 @@ public class GameController : Node
 
 
             var player = (Player)_playerInstancer.Instance();
+
+            var tutorialText = TutorialText();
+            if (tutorialText != null)
+            {
+                var tutorial = new Label
+                {
+                    Text = tutorialText,
+                    Align = Label.AlignEnum.Center,
+                    Valign = Label.VAlign.Center,
+                    RectPosition = new Vector2(-8 * _world.MapWidth, -16)
+                };
+                _world.AddChild(tutorial);
+            }
+            
             player.OnEnterTrapdoor = OnPlayerEnterTrapdoor;
             player.OnDeath = OnPlayerDeath;
             var playerSpawn = _spawner.FindSpawn(player, Vector2I.Zero, size);
@@ -66,6 +81,18 @@ public class GameController : Node
             }
 
             _sceneTransition.FadeOut();
+        }
+
+        private string? TutorialText()
+        {
+            return _roomLevel switch
+            {
+                1 => "Walk into enemies to stab them.",
+                2 => "Stabbing an unsuspecting victim deals 3x damage.",
+                3 => "Enemies who witness murder will attack.",
+                4 => "Enemies who survive attacks will yell for help.",
+                _ => null
+            };
         }
 
         private void OnPlayerEnterTrapdoor() {
