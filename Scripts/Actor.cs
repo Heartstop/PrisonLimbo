@@ -3,7 +3,7 @@ namespace PrisonLimbo.Scripts
 {
     public abstract class Actor : WorldEntity
     {
-        protected ActorAnimationController AnimationController;
+        public ActorAnimationController AnimationController;
         [Export]
         public float Health { get; private set; } = 100;
         [Export]
