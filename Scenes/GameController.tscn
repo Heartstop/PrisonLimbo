@@ -90,7 +90,7 @@ __meta__ = {
 script = ExtResource( 3 )
 
 [node name="TurnTimer" type="Timer" parent="ActorTurnController"]
-wait_time = 10.0
+wait_time = 5.0
 one_shot = true
 
 [node name="TurnDelay" type="Timer" parent="ActorTurnController"]

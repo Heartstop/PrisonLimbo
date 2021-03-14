@@ -1,5 +1,6 @@
 using PrisonLimbo.Scripts.Singletons;
 using System.Linq;
+using System;
 
 namespace PrisonLimbo.Scripts
 {
@@ -7,7 +8,8 @@ namespace PrisonLimbo.Scripts
     {
         private bool _canMove = true;
         private bool _passTurn = false;
-
+        public Action OnEnterTrapdoor { get; set; } = null;
+        public Action OnDeath { get; set; } = null;
         public override void TakeTurn()
         {
             _passTurn = false;
@@ -21,7 +23,7 @@ namespace PrisonLimbo.Scripts
 
         public override void Die()
         {
-            throw new System.NotImplementedException();
+            OnDeath!.Invoke();
         }
 
         private void ProcessMove()
@@ -31,7 +33,9 @@ namespace PrisonLimbo.Scripts
             if (dir == Direction.None || !_canMove || _passTurn)
                 return;
             
-            var npc = (NpcActor?)World.GetEntities(newPos).SingleOrDefault((entity) => entity is NpcActor);
+            var entities = World.GetEntities(newPos);
+            var npc = (NpcActor?)entities.SingleOrDefault((entity) => entity is NpcActor);
+            var trapdoor = (Trapdoor?)entities.SingleOrDefault((entity) => entity is Trapdoor);
             _canMove = false;
 
             if(npc != null){
@@ -39,6 +43,8 @@ namespace PrisonLimbo.Scripts
                     npc.ApplyDamage(Damage);
                     PassTurn();
                 });
+            } else if(trapdoor != null){
+                OnEnterTrapdoor!.Invoke();
             } else if(World.CanMove(this, newPos)) {
                 AnimationController.PlayAnimation(dir.ToAnimationState(), () => {
                     MapPosition = newPos;
