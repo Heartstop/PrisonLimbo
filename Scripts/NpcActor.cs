@@ -17,6 +17,7 @@ namespace PrisonLimbo.Scripts
                 return true;
             if(!World.CanMove(this, direction))
                 return false;
+            SoundSystem.PlayStepSound();
             AnimateMove(direction.ToAnimationState(), MapPosition + direction.ToVector2I());
             return true;
         }

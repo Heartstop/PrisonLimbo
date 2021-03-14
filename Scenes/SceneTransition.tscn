@@ -28,6 +28,6 @@ __meta__ = {
 }
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-playback_speed = 1.5
+playback_speed = 1.2
 anims/FadeIn = SubResource( 1 )
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="OnAnimationFinished"]

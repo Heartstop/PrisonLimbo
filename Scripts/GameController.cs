@@ -11,6 +11,7 @@ public class GameController : Node
         private Spawner _spawner;
         private ActorTurnController _actorTurnController;
         private SceneTransition _sceneTransition;
+        private AudioStreamPlayer _winSoundPlayer;
         private Label _levelLabel;
         private Label _tutorialLabel;
         private readonly Random _random = new Random();
@@ -24,6 +25,9 @@ public class GameController : Node
             _tutorialLabel = GetNode<Label>("GUILayer/TutorialLabel");
             _actorTurnController = GetNode<ActorTurnController>("ActorTurnController");
             _sceneTransition = GetNode<SceneTransition>("GUILayer/SceneTransition");
+
+            _winSoundPlayer = GetNode<AudioStreamPlayer>("WinSoundPlayer");
+
             GenerateWorld();
         }
 
@@ -92,6 +96,7 @@ public class GameController : Node
         }
 
         private void OnPlayerEnterTrapdoor() {
+            _winSoundPlayer.Play();
             _sceneTransition.FadeIn(() => {
                 _roomLevel += 1;
                 _world.QueueFree();
@@ -100,6 +105,7 @@ public class GameController : Node
         }
 
         private void OnPlayerDeath() {
+            SoundSystem.PlayDieSound();
             GetTree().ChangeScene("Scenes/Menu.tscn");
         }
 
