@@ -29,7 +29,7 @@ public class GameController : Node
             _levelLabel.Text = _roomLevel.ToString(); 
 
             var size = GenerateRoomSize();
-            var roomCells = new RoomMaker(_random, 3, (rand, roomW, roomH) => roomW > 10 || _roomLevel == 1 ? true : _random.NextBool(0.75)).GenerateRooms(size.X, size.Y);
+            var roomCells = new RoomMaker(_random, 3, (rand, roomW, roomH) => roomW > 10 || roomH > 10 || _roomLevel <= 3 || _random.NextBool(0.75)).GenerateRooms(size.X, size.Y);
             _world = new World(_random, roomCells);
             _spawner = new Spawner(_random, _world);
             AddChild(_world);
@@ -83,6 +83,6 @@ public class GameController : Node
         private Vector2I GenerateRoomSize() => new Vector2I((int)Math.Round(8+(_roomLevel * 0.8)),(int)Math.Round(8+(_roomLevel * 0.8)));
         
 
-        private int GenerateAmountOfGuards() => (int)Math.Ceiling((_roomLevel * 0.75) + 0.8);
+        private int GenerateAmountOfGuards() => (int)Math.Round(_roomLevel*_roomLevel*0.09)+1;
     }
 }
