@@ -8,10 +8,7 @@ namespace PrisonLimbo.Scripts
     {
         private bool _canMove = true;
         private bool _passTurn = false;
-        private Action _onEnterTrapdoor = null;
-        public Player(Action onEnterTrapdoor){
-            _onEnterTrapdoor = onEnterTrapdoor;
-        }
+        public Action OnEnterTrapdoor {get; set;} = null;
         public override void TakeTurn()
         {
             _passTurn = false;
@@ -46,7 +43,7 @@ namespace PrisonLimbo.Scripts
                     PassTurn();
                 });
             } else if(trapdoor != null){
-                _onEnterTrapdoor!.Invoke();
+                OnEnterTrapdoor!.Invoke();
             } else if(World.CanMove(this, newPos)) {
                 AnimationController.PlayAnimation(dir.ToAnimationState(), () => {
                     MapPosition = newPos;

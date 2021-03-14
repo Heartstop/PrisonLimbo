@@ -35,6 +35,7 @@ public class GameController : Node
 
 
             var player = (Player)_playerInstancer.Instance();
+            player.OnEnterTrapdoor = OnPlayerEnterTrapdoor;
             var playerSpawn = _spawner.FindSpawn(player, Vector2I.Zero, size);
             if(playerSpawn is Vector2I ps){
                 _world.AddChild(player);
