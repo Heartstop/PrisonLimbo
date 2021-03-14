@@ -30,15 +30,29 @@ public static class DirectionExtensions
     }
 
     [Pure]
-    public static Vector2 ToVector2(this Direction direction)
+    public static Vector2I ToVector2I(this Direction direction)
     {
         return direction switch
         {
-            Direction.None => Vector2.Zero,
-            Direction.Up => Vector2.Up,
-            Direction.Right => Vector2.Right,
-            Direction.Down => Vector2.Down,
-            Direction.Left => Vector2.Left,
+            Direction.None => Vector2I.Zero,
+            Direction.Up => Vector2I.Up,
+            Direction.Right => Vector2I.Right,
+            Direction.Down => Vector2I.Down,
+            Direction.Left => Vector2I.Left,
+            _ => throw new ArgumentOutOfRangeException(nameof(direction), direction, null)
+        };
+    }
+
+    [Pure]
+    public static Direction Invert(this Direction direction)
+    {
+        return direction switch
+        {
+            Direction.None => Direction.None,
+            Direction.Up => Direction.Down,
+            Direction.Right => Direction.Left,
+            Direction.Down => Direction.Up,
+            Direction.Left => Direction.Right,
             _ => throw new ArgumentOutOfRangeException(nameof(direction), direction, null)
         };
     }

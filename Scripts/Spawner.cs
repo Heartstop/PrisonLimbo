@@ -1,5 +1,4 @@
 using System;
-using Godot;
 
 namespace PrisonLimbo.Scripts
 {
@@ -39,6 +38,6 @@ namespace PrisonLimbo.Scripts
             return default;
         }
 
-        private bool Spawnable(WorldEntity entity, Vector2I position) => _world.CanMove(entity, (Vector2) position);
+        private bool Spawnable(WorldEntity entity, Vector2I position) => _world.CanMove(entity, position);
     }
 }

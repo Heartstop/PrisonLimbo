@@ -27,7 +27,7 @@ namespace PrisonLimbo.Scripts
         private void ProcessMove()
         {
             var dir = InputSystem.Direction;
-            var newPos = MapPosition + dir.ToVector2();
+            var newPos = MapPosition + dir.ToVector2I();
             if (dir == Direction.None || !_canMove || _passTurn)
                 return;
             
@@ -35,12 +35,12 @@ namespace PrisonLimbo.Scripts
             _canMove = false;
 
             if(npc != null){
-                _animationController.PlayAnimation(dir.ToAnimationState(AnimationAction.Stab), () => {
+                AnimationController.PlayAnimation(dir.ToAnimationState(AnimationAction.Stab), () => {
                     npc.ApplyDamage(Damage);
                     PassTurn();
                 });
             } else if(World.CanMove(this, newPos)) {
-                _animationController.PlayAnimation(dir.ToAnimationState(), () => {
+                AnimationController.PlayAnimation(dir.ToAnimationState(), () => {
                     MapPosition = newPos;
                     PassTurn();
                     });

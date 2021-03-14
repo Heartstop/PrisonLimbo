@@ -6,7 +6,7 @@ namespace PrisonLimbo.Scripts
     {
         public NpcActor Creator { get; }
 
-        public NpcMoveMark(World world, NpcActor creator, Vector2 position)
+        public NpcMoveMark(World world, NpcActor creator, Vector2I position)
         {
             World = world;
             Creator = creator;

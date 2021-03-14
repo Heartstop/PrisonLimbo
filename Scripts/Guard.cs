@@ -1,25 +1,37 @@
 using System;
+using System.Collections.Generic;
 using Godot;
+using PrisonLimbo.Scripts.Extensions;
 
 namespace PrisonLimbo.Scripts
 {
     public class Guard : NpcActor
     {
         private BehaviourState _behaviourState = BehaviourState.Strolling;
-        private PackedScene _actorAnimationControllerInstancer = GD.Load<PackedScene>("Scenes/Characters/ActorAnimationController.tscn");
+        private readonly PackedScene _actorAnimationControllerInstancer = GD.Load<PackedScene>("Scenes/Characters/ActorAnimationController.tscn");
+
+        private Queue<Direction> _strollPath;
 
         public override void TakeTurn()
-        {   
+        {
+            if (_behaviourState != BehaviourState.Strolling)
+                _strollPath = null;
+            
             switch(_behaviourState){
-                case BehaviourState.Strolling: {
-                    var randomDirection = (Direction)_random.Next(0,5);
-                    if(randomDirection == Direction.None || !World.CanMove(this, randomDirection))
-                        return;
-                    AnimateMove(randomDirection.ToAnimationState(),MapPosition + randomDirection.ToVector2());
-                    break;
-                }
                 case BehaviourState.None:
                     break;
+                case BehaviourState.Strolling: {
+                    if (_strollPath == null || _strollPath.Count == 0)
+                        _strollPath = GetStroll().ToQueue();
+
+                    var stepDir = _strollPath.Dequeue();
+                    var steppedSuccess = Step(stepDir);
+                    if (!steppedSuccess)
+                        _strollPath = null;
+                    break;
+                }
+                case BehaviourState.Attack:
+                    throw new NotImplementedException();
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -41,7 +53,7 @@ namespace PrisonLimbo.Scripts
 
             pivot.GlobalPosition = GlobalPosition + new Vector2(8,16);
             deathAnimation.Animation = "guard";
-            deathAnimation.FlipH = _animationController.FlipH;
+            deathAnimation.FlipH = AnimationController.FlipH;
             deathAnimation.PlayAnimation(AnimationState.Death, () => deathAnimation.QueueFree());
         }
     }

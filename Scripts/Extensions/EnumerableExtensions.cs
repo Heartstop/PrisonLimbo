@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics.Contracts;
 using System.Linq;
 
@@ -21,5 +22,12 @@ namespace PrisonLimbo.Scripts.Extensions
 
             return buffer;
         }
+
+        [Pure]
+        public static ImmutableQueue<T> ToImmutableQueue<T>(this IEnumerable<T> source)
+            => ImmutableQueue.CreateRange(source);
+
+        [Pure]
+        public static Queue<T> ToQueue<T>(this IEnumerable<T> source) => new Queue<T>(source);
     }
 }
