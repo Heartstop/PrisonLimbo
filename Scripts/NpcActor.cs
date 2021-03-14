@@ -165,7 +165,7 @@ namespace PrisonLimbo.Scripts
             foreach (var guard in World
                 .GetChildren()
                 .OfType<Guard>()
-                .Where(g => Math.Abs(g.MapPosition.X - MapPosition.X) + Math.Abs(g.MapPosition.Y - MapPosition.Y) <= soundDistance))
+                .Where(g => g.MapPosition.DistanceStepsL(MapPosition) <= soundDistance))
             {
                 guard.Alert();
             }
