@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://Assets/PrisonLimboBackground.png" type="Texture" id=1]
 [ext_resource path="res://Assets/ArizoneUnicaseRegular-5dRZ.ttf" type="DynamicFontData" id=2]
@@ -176,6 +176,30 @@ tracks/1/keys = {
 "values": [ Vector2( 1, 1 ), Vector2( 1.2, 1.2 ), Vector2( 1, 1 ) ]
 }
 
+[sub_resource type="DynamicFont" id=17]
+font_data = ExtResource( 2 )
+
+[sub_resource type="StyleBoxFlat" id=15]
+bg_color = Color( 0.352941, 0.411765, 0.533333, 1 )
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 1, 1, 1, 1 )
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+expand_margin_left = 4.0
+expand_margin_right = 4.0
+expand_margin_top = 4.0
+expand_margin_bottom = 4.0
+shadow_size = 1
+shadow_offset = Vector2( 1, 1 )
+
+[sub_resource type="StyleBoxFlat" id=16]
+bg_color = Color( 0.2, 0.235294, 0.341176, 1 )
+
 [node name="MenuController" type="Node"]
 script = ExtResource( 5 )
 
@@ -259,4 +283,71 @@ autoplay = "Text Size"
 playback_speed = 0.2
 "anims/Text Size" = SubResource( 13 )
 
+[node name="VboxSliders" type="VBoxContainer" parent="MarginContainer"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -517.0
+margin_top = 20.0
+margin_right = -4.0
+margin_bottom = 112.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HboxMusic" type="HBoxContainer" parent="MarginContainer/VboxSliders"]
+margin_right = 514.0
+margin_bottom = 24.0
+custom_constants/separation = 12
+
+[node name="Label" type="Label" parent="MarginContainer/VboxSliders/HboxMusic"]
+margin_right = 270.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 270, 0 )
+custom_fonts/font = SubResource( 17 )
+text = "Music Volume"
+align = 2
+
+[node name="HSlider" type="HSlider" parent="MarginContainer/VboxSliders/HboxMusic"]
+margin_left = 282.0
+margin_right = 502.0
+margin_bottom = 23.0
+rect_min_size = Vector2( 220, 23 )
+custom_styles/slider = SubResource( 15 )
+custom_styles/grabber_area = SubResource( 16 )
+min_value = -80.0
+max_value = 0.0
+
+[node name="HboxEffects" type="HBoxContainer" parent="MarginContainer/VboxSliders"]
+margin_top = 28.0
+margin_right = 514.0
+margin_bottom = 52.0
+custom_constants/separation = 12
+
+[node name="Label" type="Label" parent="MarginContainer/VboxSliders/HboxEffects"]
+margin_right = 270.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 270, 0 )
+custom_fonts/font = SubResource( 17 )
+text = "Effects Volume"
+align = 2
+__meta__ = {
+"_editor_description_": ""
+}
+
+[node name="HSlider" type="HSlider" parent="MarginContainer/VboxSliders/HboxEffects"]
+margin_left = 282.0
+margin_right = 502.0
+margin_bottom = 23.0
+rect_min_size = Vector2( 220, 23 )
+custom_styles/slider = SubResource( 15 )
+custom_styles/grabber_area = SubResource( 16 )
+min_value = -80.0
+max_value = 0.0
+__meta__ = {
+"_editor_description_": ""
+}
+
 [node name="SceneTransition" parent="." instance=ExtResource( 4 )]
+mouse_filter = 2
+[connection signal="value_changed" from="MarginContainer/VboxSliders/HboxMusic/HSlider" to="." method="MusicValueChanged"]
+[connection signal="value_changed" from="MarginContainer/VboxSliders/HboxEffects/HSlider" to="." method="EffectValueChanged"]

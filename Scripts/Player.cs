@@ -28,6 +28,10 @@ namespace PrisonLimbo.Scripts
 
         private void ProcessMove()
         {
+            if(InputSystem.Act){
+                PassTurn();
+                return;
+            }
             var dir = InputSystem.Direction;
             var newPos = MapPosition + dir.ToVector2I();
             if (dir == Direction.None || !_canMove || _passTurn)
@@ -47,9 +51,9 @@ namespace PrisonLimbo.Scripts
             } else if(trapdoor != null){
                 OnEnterTrapdoor!.Invoke();
             } else if(World.CanMove(this, newPos)) {
+                SoundSystem.PlayStepSound();
                 AnimationController.PlayAnimation(dir.ToAnimationState(), () => {
                     MapPosition = newPos;
-                    SoundSystem.PlayStepSound();
                     PassTurn();
                     });
             }

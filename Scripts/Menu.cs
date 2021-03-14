@@ -19,4 +19,9 @@ public class Menu : Node
             });
         }
     }
+    
+    public void EffectValueChanged(float value) => AudioServer.SetBusVolumeDb(1, value);
+    public void MusicValueChanged(float value) => AudioServer.SetBusVolumeDb(2, value);
+
+
 }

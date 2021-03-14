@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Scripts/GameController.cs" type="Script" id=1]
 [ext_resource path="res://Scenes/Timebar.tscn" type="PackedScene" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://Assets/Hourglass_Time.png" type="Texture" id=4]
 [ext_resource path="res://Assets/ArizoneUnicaseRegular-5dRZ.ttf" type="DynamicFontData" id=5]
 [ext_resource path="res://Scenes/SceneTransition.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Assets/Sounds/Win.wav" type="AudioStream" id=7]
 
 [sub_resource type="DynamicFont" id=1]
 size = 30
@@ -95,5 +96,9 @@ one_shot = true
 
 [node name="TurnDelay" type="Timer" parent="ActorTurnController"]
 one_shot = true
+
+[node name="WinSoundPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 7 )
+bus = "Effects"
 [connection signal="timeout" from="ActorTurnController/TurnTimer" to="ActorTurnController" method="OnTurnTimerTimeout"]
 [connection signal="timeout" from="ActorTurnController/TurnDelay" to="ActorTurnController" method="OnTurnDelayTimeout"]
