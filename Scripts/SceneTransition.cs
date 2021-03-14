@@ -29,9 +29,7 @@ public class SceneTransition : ColorRect
     }
 
     private void OnAnimationFinished(string animationName) {
-        if(_postFade != null){
-            _postFade();
-        }
+        _postFade?.Invoke();
         _postFade = null;
     }
 }
