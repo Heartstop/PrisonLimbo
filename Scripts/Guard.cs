@@ -75,6 +75,8 @@ namespace PrisonLimbo.Scripts
             }
         }
 
+        public void Alert() => _behaviourState = BehaviourState.Attack;
+
         public override bool TurnProcess()
         {
             return false;

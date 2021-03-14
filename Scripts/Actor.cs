@@ -24,7 +24,7 @@ namespace PrisonLimbo.Scripts
             base._Process(delta);
         }
 
-        public void ApplyDamage(float damage){
+        public virtual void ApplyDamage(float damage){
             Health -= damage;
             if(Health <= 0)
             {

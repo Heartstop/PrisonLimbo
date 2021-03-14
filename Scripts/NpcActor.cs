@@ -119,5 +119,20 @@ namespace PrisonLimbo.Scripts
                 postAnimation?.Invoke();
             });
         }
+
+        public override void ApplyDamage(float damage)
+        {
+            base.ApplyDamage(damage);
+
+            var soundDistance = Health > 0 ? 20 : 10;
+            
+            foreach (var guard in World
+                .GetChildren()
+                .OfType<Guard>()
+                .Where(g => Math.Abs(g.MapPosition.X - MapPosition.X) + Math.Abs(g.MapPosition.Y - MapPosition.Y) <= soundDistance))
+            {
+                guard.Alert();
+            }
+        }
     }
 }
