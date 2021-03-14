@@ -8,6 +8,7 @@ public class GameController : Node
         private World _world;
         private Spawner _spawner;
         private ActorTurnController _actorTurnController;
+        private SceneTransition _sceneTransition;
         private Label _levelLabel;
         private Random _random = new Random();
         private PackedScene _guardInstancer = GD.Load<PackedScene>("res://Scenes/Characters/Guard.tscn");
@@ -17,6 +18,9 @@ public class GameController : Node
         {
             _levelLabel = GetNode<Label>("GUILayer/TopContainer/HBoxContainer/Level");
             _actorTurnController = GetNode<ActorTurnController>("ActorTurnController");
+            _sceneTransition = GetNode<SceneTransition>("GUILayer/SceneTransition");
+            _sceneTransition.FadeOut();
+            
             GenerateWorld();
         }
 

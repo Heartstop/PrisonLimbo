@@ -1,10 +1,11 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Scripts/GameController.cs" type="Script" id=1]
 [ext_resource path="res://Scenes/Timebar.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Scripts/ActorTurnController.cs" type="Script" id=3]
 [ext_resource path="res://Assets/Hourglass_Time.png" type="Texture" id=4]
 [ext_resource path="res://Assets/ArizoneUnicaseRegular-5dRZ.ttf" type="DynamicFontData" id=5]
+[ext_resource path="res://Scenes/SceneTransition.tscn" type="PackedScene" id=6]
 
 [sub_resource type="DynamicFont" id=1]
 size = 30
@@ -45,6 +46,8 @@ __meta__ = {
 "_edit_use_anchors_": false,
 "_editor_description_": ""
 }
+
+[node name="SceneTransition" parent="GUILayer" instance=ExtResource( 6 )]
 
 [node name="TopContainer" type="MarginContainer" parent="GUILayer"]
 anchor_right = 1.0
