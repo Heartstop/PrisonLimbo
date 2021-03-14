@@ -11,7 +11,7 @@ namespace PrisonLimbo.Scripts
     {
         private BehaviourState _behaviourState = BehaviourState.Strolling;
         private readonly PackedScene _actorAnimationControllerInstancer = GD.Load<PackedScene>("Scenes/Characters/ActorAnimationController.tscn");
-        private const int AttackSight = 20;
+        private const int AttackSight = 10;
 
         private Queue<Direction> _strollPath;
 
