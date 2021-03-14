@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using PrisonLimbo.Scripts.WorldGenerator;
+using PrisonLimbo.Scripts.Extensions;
 namespace PrisonLimbo.Scripts {
 public class GameController : Node
 {
@@ -19,7 +20,7 @@ public class GameController : Node
 
         private void GenerateWorld(){
             var size = GenerateRoomSize();
-            var roomCells = new RoomMaker(_random, 4, (rand, roomW, roomH) => true).GenerateRooms(size.X, size.Y);
+            var roomCells = new RoomMaker(_random, 4, (rand, roomW, roomH) => _random.NextBool(0.75)).GenerateRooms(size.X, size.Y);
             _world = new World(_random, roomCells);
             _spawner = new Spawner(_random, _world);
             AddChild(_world);
@@ -43,9 +44,9 @@ public class GameController : Node
                 }
             };
         }
-        private Vector2I GenerateRoomSize() => new Vector2I((int)Math.Round(6+(_roomLevel * 2.6)),(int)Math.Round(6+(_roomLevel * 2.6)));
+        private Vector2I GenerateRoomSize() => new Vector2I((int)Math.Round(6+(_roomLevel * 1.6)),(int)Math.Round(6+(_roomLevel * 1.6)));
         
 
-        private int GenerateAmountOfGuards() => (int)Math.Ceiling((_roomLevel * 0.6) + 0.8);
+        private int GenerateAmountOfGuards() => (int)Math.Ceiling((_roomLevel * 0.75) + 0.8);
     }
 }

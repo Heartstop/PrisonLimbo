@@ -45,4 +45,5 @@ public enum AnimationState
     StabDown,
     StabLeft,
     StabUp,
+    Death,
 }

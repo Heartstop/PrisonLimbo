@@ -11,4 +11,3 @@ position = Vector2( 8, 16 )
 
 [node name="ActorAnimationController" parent="Pivot" instance=ExtResource( 2 )]
 animation = "guard"
-flip_h = false
