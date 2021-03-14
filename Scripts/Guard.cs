@@ -6,6 +6,7 @@ namespace PrisonLimbo.Scripts
     public class Guard : NpcActor
     {
         private BehaviourState _behaviourState = BehaviourState.Strolling;
+        private PackedScene _actorAnimationControllerInstancer = GD.Load<PackedScene>("Scenes/Characters/ActorAnimationController.tscn");
 
         public override void TakeTurn()
         {   
@@ -32,7 +33,16 @@ namespace PrisonLimbo.Scripts
 
         public override void Die()
         {
-            throw new NotImplementedException();
+            var deathAnimation = (ActorAnimationController)_actorAnimationControllerInstancer.Instance();
+            var pivot = new Position2D();
+
+            pivot.AddChild(deathAnimation);
+            World.AddChild(pivot);
+
+            pivot.GlobalPosition = GlobalPosition + new Vector2(8,16);
+            deathAnimation.Animation = "guard";
+            deathAnimation.FlipH = _animationController.FlipH;
+            deathAnimation.PlayAnimation(AnimationState.Death, () => deathAnimation.QueueFree());
         }
     }
 }
