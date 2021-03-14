@@ -42,4 +42,18 @@ public static class DirectionExtensions
             _ => throw new ArgumentOutOfRangeException(nameof(direction), direction, null)
         };
     }
+
+    [Pure]
+    public static Direction Invert(this Direction direction)
+    {
+        return direction switch
+        {
+            Direction.None => Direction.None,
+            Direction.Up => Direction.Down,
+            Direction.Right => Direction.Left,
+            Direction.Down => Direction.Up,
+            Direction.Left => Direction.Right,
+            _ => throw new ArgumentOutOfRangeException(nameof(direction), direction, null)
+        };
+    }
 }

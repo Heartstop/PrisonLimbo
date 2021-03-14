@@ -30,12 +30,12 @@ namespace PrisonLimbo.Scripts
             _canMove = false;
 
             if(npc != null){
-                _animationController.PlayAnimation(dir.ToAnimationState(AnimationAction.Stab), () => {
+                AnimationController.PlayAnimation(dir.ToAnimationState(AnimationAction.Stab), () => {
                     npc.Health -= Damage;
                     PassTurn();
                 });
             } else if(World.CanMove(this, newPos)) {
-                _animationController.PlayAnimation(dir.ToAnimationState(), () => {
+                AnimationController.PlayAnimation(dir.ToAnimationState(), () => {
                     MapPosition = newPos;
                     PassTurn();
                     });

@@ -3,7 +3,7 @@ namespace PrisonLimbo.Scripts
 {
     public abstract class Actor : WorldEntity
     {
-        protected ActorAnimationController _animationController;
+        protected ActorAnimationController AnimationController;
         [Export]
         public float Health { get; set; } = 100;
         [Export]
@@ -18,7 +18,7 @@ namespace PrisonLimbo.Scripts
             base._Ready();
             ZAsRelative = false;
             ZIndex = (int) Position.y;
-            _animationController = GetNode<ActorAnimationController>("Pivot/ActorAnimationController");
+            AnimationController = GetNode<ActorAnimationController>("Pivot/ActorAnimationController");
         }
 
         public override void _Process(float delta)

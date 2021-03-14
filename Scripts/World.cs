@@ -11,7 +11,7 @@ namespace PrisonLimbo.Scripts
         TileMap _tileMap;
         Random _random = new Random();
         
-        private static readonly IImmutableSet<Tiles> tilesWithoutCollision = ImmutableHashSet.Create(Tiles.Floor, Tiles.FloorShadow);
+        private static readonly IImmutableSet<Tiles> TilesWithoutCollision = ImmutableHashSet.Create(Tiles.Floor, Tiles.FloorShadow);
 
         public override void _Ready()
         {
@@ -32,10 +32,13 @@ namespace PrisonLimbo.Scripts
             return CanMove(requestingEntity, newPos);
         }
 
+        public bool CanMove<T>(T requestingEntity, Vector2I target) where T : WorldEntity
+            => CanMove(requestingEntity, (Vector2) target);
+
         public bool CanMove<T>(T requestingEntity, Vector2 target) where T : WorldEntity
         {
             var cell = _tileMap.GetCellv(target);
-            if (!tilesWithoutCollision.Contains((Tiles) cell))
+            if (!TilesWithoutCollision.Contains((Tiles) cell))
                 return false;
             
             return GetEntities(target)
