@@ -116,7 +116,7 @@ namespace PrisonLimbo.Scripts
                 }
             }
 
-            var destination = visited.ToImmutableArray()[RandomSource.Next(0, visited.Count)];
+            var destination = visited.GetRandom(RandomSource);
             var path = new Direction[destination.Value];
             var current = destination.Key;
 
